@@ -1,0 +1,5 @@
+# GitHub Pages Jekyll configuration for Koroshi Dashboards
+theme: jekyll-theme-minimal
+title: Koroshi Midseason Sale Dashboards
+description: Interactive sales dashboards for V26 collection
+show_downloads: false
