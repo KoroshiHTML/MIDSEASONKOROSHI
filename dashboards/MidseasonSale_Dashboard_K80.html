@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midseason Sale V26 — K80 Gran Jonquera · Koroshi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            max-width: 1600px;
+            margin: 0 auto 24px;
+            border-left: 5px solid #e74c3c;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        .header p { color: #999; font-size: 13px; }
+
+        .header-right { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+        button {
+            padding: 9px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        #download-btn  { background: #e74c3c; color: white; }
+        #download-csv  { background: #27ae60; color: white; }
+
+        /* Filter bar */
+        .filters {
+            max-width: 1600px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters label { font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; white-space: nowrap; }
+        select, input[type=text] {
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        select:focus, input[type=text]:focus { outline: none; border-color: #e74c3c; }
+        #fam-select { min-width: 220px; }
+        #search-input { min-width: 180px; }
+
+        /* Stats bar */
+        .stats {
+            max-width: 1600px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 12px;
+            color: #666;
+        }
+        .stat-box span { color: #e74c3c; font-weight: 700; font-size: 16px; display: block; margin-bottom: 2px; }
+
+        /* Grid */
+        .grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            border-color: #e74c3c;
+            background: #212121;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231,76,60,0.15);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 120%;
+            background: #111;
+            overflow: hidden;
+        }
+        .image {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+        .no-image {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #444;
+        }
+        .stock-badge {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+        }
+
+        .info {
+            padding: 10px 12px 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .familia { font-size: 9px; text-transform: uppercase; color: #f39c12; font-weight: 700; letter-spacing: 0.4px; }
+        .subfam  { font-size: 9px; color: #666; text-transform: uppercase; }
+        .article-ref { font-size: 10px; color: #555; font-family: monospace; }
+
+        .prices {
+            border-top: 1px solid #222;
+            padding-top: 8px;
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .price-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .price-label { color: #666; }
+        .pvp-val { font-weight: 500; color: #999; text-decoration: line-through; text-decoration-color: #555; }
+        .sale-val { color: #2ecc71; font-weight: 700; font-size: 13px; }
+        .disc-badge { background: #e74c3c; color: white; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px; }
+            .header h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1>🏷️ Midseason Sale V26 — K80 Gran Jonquera</h1>
+        <p>Koroshi · Outlet Gran Jonquera · Stock de rebajas · Actualizado 05/06/2026</p>
+    </div>
+    <div class="header-right">
+        <button id="download-btn">📥 Excel</button>
+        <button id="download-csv">📄 CSV</button>
+    </div>
+</div>
+
+<div class="filters">
+    <label>Familia:</label>
+    <select id="fam-select">
+        <option value="">Todas las familias</option>
+    </select>
+    <label>Buscar:</label>
+    <input type="text" id="search-input" placeholder="Artículo, referencia...">
+</div>
+
+<div class="stats">
+    <div class="stat-box"><span id="stat-items">0</span>Artículos</div>
+    <div class="stat-box"><span id="stat-units">0</span>Uds en stock</div>
+    <div class="stat-box"><span id="stat-disc">0%</span>Dto. medio</div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const ALL_ITEMS = [{"article": "2511ZA07", "color": "000003", "referencia": "2511ZA07_000003", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "BANDOLERAS", "pvp": 25.99, "sale": 15.99, "disc": 0.3848, "stock": 1}, {"article": "2411ZA01", "color": "000030", "referencia": "2411ZA01_000030", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "MOCHILAS", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 1}, {"article": "2411ZA04", "color": "000003", "referencia": "2411ZA04_000003", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "MOCHILAS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "2411ZA04", "color": "000005", "referencia": "2411ZA04_000005", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "MOCHILAS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "2511ZA05", "color": "000005", "referencia": "2511ZA05_000005", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "MOCHILAS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 1}, {"article": "2511ZA08", "color": "000005", "referencia": "2511ZA08_000005", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "MOCHILAS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 2}, {"article": "2511ZA09", "color": "000010", "referencia": "2511ZA09_000010", "desc_fam": "ACCESORIOS HOMBRE", "subfamilia": "MOCHILAS", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 5}, {"article": "2511ZT03", "color": "000323", "referencia": "2511ZT03_000323", "desc_fam": "CALCETINES HOMBRE", "subfamilia": "CORTOS", "pvp": 17.99, "sale": 11.99, "disc": 0.3335, "stock": 6}, {"article": "2511ZT04", "color": "000001", "referencia": "2511ZT04_000001", "desc_fam": "CALCETINES HOMBRE", "subfamilia": "CORTOS", "pvp": 17.99, "sale": 11.99, "disc": 0.3335, "stock": 10}, {"article": "2311ZT01", "color": "000323", "referencia": "2311ZT01_000323", "desc_fam": "CALCETINES HOMBRE", "subfamilia": "LARGOS", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 2}, {"article": "2511ZT01", "color": "000001", "referencia": "2511ZT01_000001", "desc_fam": "CALCETINES HOMBRE", "subfamilia": "LARGOS", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 6}, {"article": "26CW3", "color": "000029", "referencia": "26CW3_000029", "desc_fam": "CALCETINES MUJER", "subfamilia": "LARGOS", "pvp": 5.99, "sale": 3.99, "disc": 0.3339, "stock": 4}, {"article": "2511XC01", "color": "000001", "referencia": "2511XC01_000001", "desc_fam": "CALZADO HOMBRE", "subfamilia": "RUNNER", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 13}, {"article": "2511XC01", "color": "000003", "referencia": "2511XC01_000003", "desc_fam": "CALZADO HOMBRE", "subfamilia": "RUNNER", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 9}, {"article": "2511XC03", "color": "000001", "referencia": "2511XC03_000001", "desc_fam": "CALZADO HOMBRE", "subfamilia": "SNEAKER", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 8}, {"article": "26B3", "color": "000019", "referencia": "26B3_000019", "desc_fam": "CINTURONES HOMBRE", "subfamilia": "nan", "pvp": 14.99, "sale": 8.99, "disc": 0.4003, "stock": 1}, {"article": "1811ZC03", "color": "000010", "referencia": "1811ZC03_000010", "desc_fam": "CINTURONES HOMBRE", "subfamilia": "CINTURONES", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 1}, {"article": "2411ZC02", "color": "000088", "referencia": "2411ZC02_000088", "desc_fam": "CINTURONES HOMBRE", "subfamilia": "CINTURONES", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 1}, {"article": "2511ZC01", "color": "000003", "referencia": "2511ZC01_000003", "desc_fam": "CINTURONES HOMBRE", "subfamilia": "CINTURONES", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 3}, {"article": "2511ZC06", "color": "000003", "referencia": "2511ZC06_000003", "desc_fam": "CINTURONES HOMBRE", "subfamilia": "CINTURONES", "pvp": 15.99, "sale": 9.99, "disc": 0.3752, "stock": 1}, {"article": "2211PT06", "color": "000003", "referencia": "2211PT06_000003", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "CARGO", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 2}, {"article": "2211PT06", "color": "000014", "referencia": "2211PT06_000014", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "CARGO", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 5}, {"article": "2311PT06", "color": "000003", "referencia": "2311PT06_000003", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "CARGO", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 7}, {"article": "1811PT03", "color": "000061", "referencia": "1811PT03_000061", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "1811PT14", "color": "000306", "referencia": "1811PT14_000306", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "1811PT51", "color": "000300", "referencia": "1811PT51_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 2}, {"article": "2011PT30", "color": "000300", "referencia": "2011PT30_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 3}, {"article": "2011PT52", "color": "000307", "referencia": "2011PT52_000307", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 2}, {"article": "2111PT22", "color": "000307", "referencia": "2111PT22_000307", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 44.99, "sale": 27.99, "disc": 0.3779, "stock": 3}, {"article": "2211PT01", "color": "000002", "referencia": "2211PT01_000002", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 2}, {"article": "2211PT10", "color": "000302", "referencia": "2211PT10_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 6}, {"article": "2211PT15", "color": "000302", "referencia": "2211PT15_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 2}, {"article": "2211PT20", "color": "000300", "referencia": "2211PT20_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 3}, {"article": "2211PT21", "color": "000301", "referencia": "2211PT21_000301", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 4}, {"article": "2311PT26", "color": "000300", "referencia": "2311PT26_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 4}, {"article": "2511PT01", "color": "000001", "referencia": "2511PT01_000001", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 7}, {"article": "2511PT01", "color": "000010", "referencia": "2511PT01_000010", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 11}, {"article": "2511PT01", "color": "000062", "referencia": "2511PT01_000062", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 16}, {"article": "2511PT11", "color": "000300", "referencia": "2511PT11_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 12}, {"article": "2511PT12", "color": "000307", "referencia": "2511PT12_000307", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 4}, {"article": "2511PT13", "color": "000301", "referencia": "2511PT13_000301", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 11}, {"article": "2511PT15", "color": "000302", "referencia": "2511PT15_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 22}, {"article": "2511PT20", "color": "000300", "referencia": "2511PT20_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 1}, {"article": "2511PT21", "color": "000307", "referencia": "2511PT21_000307", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 10}, {"article": "2511PT25", "color": "000300", "referencia": "2511PT25_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 23}, {"article": "2511PT25", "color": "000307", "referencia": "2511PT25_000307", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 19}, {"article": "2511PT26", "color": "000302", "referencia": "2511PT26_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 33}, {"article": "2511PT27", "color": "000300", "referencia": "2511PT27_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 14}, {"article": "2511PT28", "color": "000306", "referencia": "2511PT28_000306", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 6}, {"article": "2511PT29", "color": "000302", "referencia": "2511PT29_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 8}, {"article": "2511PT30", "color": "000300", "referencia": "2511PT30_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 4}, {"article": "2511PT31", "color": "000301", "referencia": "2511PT31_000301", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 4}, {"article": "2511PT32", "color": "000302", "referencia": "2511PT32_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 7}, {"article": "2511PT33", "color": "000300", "referencia": "2511PT33_000300", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 4}, {"article": "2511PT34", "color": "000302", "referencia": "2511PT34_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 1}, {"article": "2511PT35", "color": "000306", "referencia": "2511PT35_000306", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 14}, {"article": "2511PT36", "color": "000301", "referencia": "2511PT36_000301", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 2}, {"article": "2511PT39", "color": "000306", "referencia": "2511PT39_000306", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 27}, {"article": "2511PT40", "color": "000302", "referencia": "2511PT40_000302", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JEANS", "pvp": 45.99, "sale": 28.99, "disc": 0.3696, "stock": 11}, {"article": "1811PT90", "color": "000003", "referencia": "1811PT90_000003", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 4}, {"article": "1911PT92", "color": "000003", "referencia": "1911PT92_000003", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 32.99, "sale": 20.99, "disc": 0.3637, "stock": 2}, {"article": "2011PT89", "color": "000003", "referencia": "2011PT89_000003", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 2}, {"article": "2211PT89", "color": "000070", "referencia": "2211PT89_000070", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 36.99, "sale": 22.99, "disc": 0.3785, "stock": 3}, {"article": "2211PT91", "color": "000070", "referencia": "2211PT91_000070", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 37.99, "sale": 23.99, "disc": 0.3685, "stock": 2}, {"article": "2211PT93", "color": "000003", "referencia": "2211PT93_000003", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 37.99, "sale": 23.99, "disc": 0.3685, "stock": 1}, {"article": "2511PT85", "color": "000301", "referencia": "2511PT85_000301", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 3}, {"article": "2511PT85", "color": "000306", "referencia": "2511PT85_000306", "desc_fam": "PANTALON LARGO HOMBRE", "subfamilia": "JOGGER", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "2311UN03", "color": "000323", "referencia": "2311UN03_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 25.99, "sale": 15.99, "disc": 0.3848, "stock": 2}, {"article": "2311UN04", "color": "000323", "referencia": "2311UN04_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 25.99, "sale": 15.99, "disc": 0.3848, "stock": 1}, {"article": "2511UN00", "color": "000003", "referencia": "2511UN00_000003", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 1}, {"article": "2511UN01", "color": "000323", "referencia": "2511UN01_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 1}, {"article": "2511UN02", "color": "000323", "referencia": "2511UN02_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 3}, {"article": "2511UN05", "color": "000323", "referencia": "2511UN05_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 25.99, "sale": 15.99, "disc": 0.3848, "stock": 6}, {"article": "2511UN06", "color": "000323", "referencia": "2511UN06_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "BOXER", "pvp": 25.99, "sale": 15.99, "disc": 0.3848, "stock": 4}, {"article": "2511UN10", "color": "000323", "referencia": "2511UN10_000323", "desc_fam": "ROPA INTERIOR HOMBRE", "subfamilia": "SLIP", "pvp": 32.99, "sale": 20.99, "disc": 0.3637, "stock": 6}, {"article": "2112PT27", "color": "000302", "referencia": "2112PT27_000302", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 5}, {"article": "2112PT30", "color": "000300", "referencia": "2112PT30_000300", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 6}, {"article": "2212PT11", "color": "000301", "referencia": "2212PT11_000301", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 4}, {"article": "2212PT19", "color": "000302", "referencia": "2212PT19_000302", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 3}, {"article": "2212PT21", "color": "000300", "referencia": "2212PT21_000300", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 4}, {"article": "2312PT03", "color": "000302", "referencia": "2312PT03_000302", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 4}, {"article": "2312PT06", "color": "000302", "referencia": "2312PT06_000302", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 3}, {"article": "2512PT06", "color": "000301", "referencia": "2512PT06_000301", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 1}, {"article": "2512PT10", "color": "000301", "referencia": "2512PT10_000301", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 12}, {"article": "2512PT22", "color": "000300", "referencia": "2512PT22_000300", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 10}, {"article": "2513HA01", "color": "000003", "referencia": "2513HA01_000003", "desc_fam": "COMPLEMENTOS UNISEX", "subfamilia": "COMPL UNISEX", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 5}, {"article": "2513HA01", "color": "000006", "referencia": "2513HA01_000006", "desc_fam": "COMPLEMENTOS UNISEX", "subfamilia": "COMPL UNISEX", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 3}, {"article": "2513HA02", "color": "000010", "referencia": "2513HA02_000010", "desc_fam": "COMPLEMENTOS UNISEX", "subfamilia": "COMPL UNISEX", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 1}, {"article": "2513HA03", "color": "000003", "referencia": "2513HA03_000003", "desc_fam": "COMPLEMENTOS UNISEX", "subfamilia": "COMPL UNISEX", "pvp": 19.99, "sale": 12.99, "disc": 0.3502, "stock": 1}, {"article": "2514TR02", "color": "000030", "referencia": "2514TR02_000030", "desc_fam": "TRICOT BOY", "subfamilia": "TRICOT", "pvp": 25.99, "sale": 13.99, "disc": 0.4617, "stock": 15}, {"article": "2515SU03", "color": "000130", "referencia": "2515SU03_000130", "desc_fam": "SUDADERA GIRL", "subfamilia": "PUNTO", "pvp": 25.99, "sale": 13.99, "disc": 0.4617, "stock": 5}, {"article": "2515TR01", "color": "000001", "referencia": "2515TR01_000001", "desc_fam": "TRICOT GIRL", "subfamilia": "TRICOT", "pvp": 25.99, "sale": 13.99, "disc": 0.4617, "stock": 33}, {"article": "2515TR02", "color": "000010", "referencia": "2515TR02_000010", "desc_fam": "TRICOT GIRL", "subfamilia": "TRICOT", "pvp": 25.99, "sale": 13.99, "disc": 0.4617, "stock": 13}, {"article": "2515TR03", "color": "000323", "referencia": "2515TR03_000323", "desc_fam": "TRICOT GIRL", "subfamilia": "TRICOT", "pvp": 25.99, "sale": 13.99, "disc": 0.4617, "stock": 25}, {"article": "2411CC01", "color": "000006", "referencia": "2411CC01_000006", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "MULTIPOCKETS", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 1}, {"article": "2411CC04", "color": "000061", "referencia": "2411CC04_000061", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "MULTIPOCKETS", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 2}, {"article": "2011CL01", "color": "000001", "referencia": "2011CL01_000001", "desc_fam": "CAMISA MANGA LARGA HOMBRE", "subfamilia": "CAMISA MANGA LARGA", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 1}, {"article": "2311MC03", "color": "000006", "referencia": "2311MC03_000006", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 21.99, "sale": 11.99, "disc": 0.4548, "stock": 7}, {"article": "2311MC20", "color": "000005", "referencia": "2311MC20_000005", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 24.99, "sale": 13.99, "disc": 0.4402, "stock": 6}, {"article": "2311MC51", "color": "000001", "referencia": "2311MC51_000001", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 24.99, "sale": 13.99, "disc": 0.4402, "stock": 2}, {"article": "2311MC63", "color": "000001", "referencia": "2311MC63_000001", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 17.99, "sale": 9.99, "disc": 0.4447, "stock": 2}, {"article": "24019", "color": "000013", "referencia": "24019_000013", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 17.99, "sale": 9.99, "disc": 0.4447, "stock": 2}, {"article": "2411MC11", "color": "000027", "referencia": "2411MC11_000027", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 24.99, "sale": 13.99, "disc": 0.4402, "stock": 3}, {"article": "2411MC19", "color": "000030", "referencia": "2411MC19_000030", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 5}, {"article": "2411MC32", "color": "000015", "referencia": "2411MC32_000015", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 3}, {"article": "2411MC42", "color": "000030", "referencia": "2411MC42_000030", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 2}, {"article": "2411MC50", "color": "000001", "referencia": "2411MC50_000001", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 3}, {"article": "2411MC52", "color": "000087", "referencia": "2411MC52_000087", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 3}, {"article": "2411MC72", "color": "000001", "referencia": "2411MC72_000001", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 4}, {"article": "2211MC62", "color": "000030", "referencia": "2211MC62_000030", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "HENLEY", "pvp": 17.99, "sale": 9.99, "disc": 0.4447, "stock": 1}, {"article": "2311MC77", "color": "000003", "referencia": "2311MC77_000003", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "HENLEY", "pvp": 26.99, "sale": 14.99, "disc": 0.4446, "stock": 1}, {"article": "2111JA14", "color": "000003", "referencia": "2111JA14_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 2}, {"article": "2211JA03", "color": "000006", "referencia": "2211JA03_000006", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 2}, {"article": "2211JA03", "color": "000019", "referencia": "2211JA03_000019", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 3}, {"article": "2211JA05", "color": "000068", "referencia": "2211JA05_000068", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 1}, {"article": "2211JA09", "color": "000003", "referencia": "2211JA09_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2211JA15", "color": "000039", "referencia": "2211JA15_000039", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 9}, {"article": "2211JA16", "color": "000014", "referencia": "2211JA16_000014", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 2}, {"article": "2211JA16", "color": "000027", "referencia": "2211JA16_000027", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 30.99, "disc": 0.3801, "stock": 2}, {"article": "2211JA18", "color": "000003", "referencia": "2211JA18_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2211JA20", "color": "000061", "referencia": "2211JA20_000061", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2311JA01", "color": "000003", "referencia": "2311JA01_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2311JA03", "color": "000015", "referencia": "2311JA03_000015", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 65.99, "sale": 36.99, "disc": 0.4395, "stock": 1}, {"article": "2311JA10", "color": "000003", "referencia": "2311JA10_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 2}, {"article": "2311JA14", "color": "000003", "referencia": "2311JA14_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2311JA19", "color": "000003", "referencia": "2311JA19_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 54.99, "sale": 29.99, "disc": 0.4546, "stock": 1}, {"article": "2411JA04", "color": "000181", "referencia": "2411JA04_000181", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 7}, {"article": "2411JA08", "color": "000003", "referencia": "2411JA08_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 2}, {"article": "2411JA09", "color": "000003", "referencia": "2411JA09_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 1}, {"article": "2411JA17", "color": "000003", "referencia": "2411JA17_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 54.99, "sale": 29.99, "disc": 0.4546, "stock": 1}, {"article": "2411JA26", "color": "000003", "referencia": "2411JA26_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 54.99, "sale": 29.99, "disc": 0.4546, "stock": 2}, {"article": "2411JA27", "color": "000184", "referencia": "2411JA27_000184", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2511JA02", "color": "000062", "referencia": "2511JA02_000062", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 6}, {"article": "2511JA02", "color": "000184", "referencia": "2511JA02_000184", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 2}, {"article": "2511JA03", "color": "000003", "referencia": "2511JA03_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 65.99, "sale": 36.99, "disc": 0.4395, "stock": 10}, {"article": "2511JA03", "color": "000019", "referencia": "2511JA03_000019", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 65.99, "sale": 36.99, "disc": 0.4395, "stock": 5}, {"article": "2511JA04", "color": "000003", "referencia": "2511JA04_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 1}, {"article": "2511JA05", "color": "000006", "referencia": "2511JA05_000006", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 9}, {"article": "2511JA06", "color": "000019", "referencia": "2511JA06_000019", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 2}, {"article": "2511JA08", "color": "000003", "referencia": "2511JA08_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 6}, {"article": "2511JA09", "color": "000003", "referencia": "2511JA09_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 43.99, "disc": 0.3715, "stock": 3}, {"article": "2511JA10", "color": "000003", "referencia": "2511JA10_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 1}, {"article": "2511JA14", "color": "000015", "referencia": "2511JA14_000015", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2511JA16", "color": "000039", "referencia": "2511JA16_000039", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2511JA16", "color": "000062", "referencia": "2511JA16_000062", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2511JA17", "color": "000003", "referencia": "2511JA17_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 4}, {"article": "2511JA17", "color": "000010", "referencia": "2511JA17_000010", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2511JA18", "color": "000062", "referencia": "2511JA18_000062", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 6}, {"article": "2511JA20", "color": "000003", "referencia": "2511JA20_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 5}, {"article": "2511JA20", "color": "000061", "referencia": "2511JA20_000061", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 1}, {"article": "2511JA21", "color": "000014", "referencia": "2511JA21_000014", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 69.99, "sale": 38.99, "disc": 0.4429, "stock": 2}, {"article": "2511JA23", "color": "000003", "referencia": "2511JA23_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 2}, {"article": "2511JA25", "color": "000014", "referencia": "2511JA25_000014", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 54.99, "sale": 29.99, "disc": 0.4546, "stock": 1}, {"article": "26372", "color": "000005", "referencia": "26372_000005", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 54.99, "sale": 29.99, "disc": 0.4546, "stock": 6}, {"article": "26374", "color": "000003", "referencia": "26374_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "CAZADORA", "pvp": 54.99, "sale": 29.99, "disc": 0.4546, "stock": 4}, {"article": "1811JA18", "color": "000015", "referencia": "1811JA18_000015", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "PLUMIFERO", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 2}, {"article": "2511JA50", "color": "000003", "referencia": "2511JA50_000003", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "PLUMIFERO", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 3}, {"article": "2211JA99", "color": "000039", "referencia": "2211JA99_000039", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "SUDADERA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 2}, {"article": "2311JA71", "color": "000039", "referencia": "2311JA71_000039", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "SUDADERA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2311PC22", "color": "000039", "referencia": "2311PC22_000039", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "MAO", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 8}, {"article": "2411PC26", "color": "000015", "referencia": "2411PC26_000015", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "MAO", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 4}, {"article": "2211PC14", "color": "000016", "referencia": "2211PC14_000016", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "NORMAL", "pvp": 25.99, "sale": 13.99, "disc": 0.4617, "stock": 2}, {"article": "2211PC14", "color": "000027", "referencia": "2211PC14_000027", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "NORMAL", "pvp": 25.99, "sale": 15.99, "disc": 0.3848, "stock": 4}, {"article": "2411PC14", "color": "000003", "referencia": "2411PC14_000003", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "NORMAL", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 1}, {"article": "2411PC15", "color": "000005", "referencia": "2411PC15_000005", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "NORMAL", "pvp": 32.99, "sale": 17.99, "disc": 0.4547, "stock": 2}, {"article": "2511SU10", "color": "000003", "referencia": "2511SU10_000003", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HIGH NECK", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 1}, {"article": "2511SU17", "color": "000010", "referencia": "2511SU17_000010", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HIGH NECK", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 6}, {"article": "2411SU11", "color": "000001", "referencia": "2411SU11_000001", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HOODIE", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 3}, {"article": "2511SU01", "color": "000062", "referencia": "2511SU01_000062", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HOODIE", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 15}, {"article": "2511SU09", "color": "000030", "referencia": "2511SU09_000030", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HOODIE", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 1}, {"article": "2511SU18", "color": "000003", "referencia": "2511SU18_000003", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HOODIE", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 8}, {"article": "2511SU19", "color": "000016", "referencia": "2511SU19_000016", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HOODIE", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 17}, {"article": "2511SU19", "color": "000030", "referencia": "2511SU19_000030", "desc_fam": "SUDADERA HOMBRE", "subfamilia": "HOODIE", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 11}, {"article": "2111TR12", "color": "000039", "referencia": "2111TR12_000039", "desc_fam": "TRICOT HOMBRE", "subfamilia": "HIGH NECK", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 2}, {"article": "2011TR02", "color": "000006", "referencia": "2011TR02_000006", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 2}, {"article": "2011TR04", "color": "000039", "referencia": "2011TR04_000039", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 2}, {"article": "2011TR08", "color": "000039", "referencia": "2011TR08_000039", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 3}, {"article": "2011TR09", "color": "000030", "referencia": "2011TR09_000030", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 35.99, "sale": 19.99, "disc": 0.4446, "stock": 1}, {"article": "2011TR09", "color": "000039", "referencia": "2011TR09_000039", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 35.99, "sale": 19.99, "disc": 0.4446, "stock": 1}, {"article": "2511TR01", "color": "000014", "referencia": "2511TR01_000014", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 1}, {"article": "2511TR02", "color": "000039", "referencia": "2511TR02_000039", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 2}, {"article": "2511TR08", "color": "000030", "referencia": "2511TR08_000030", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 1}, {"article": "2511TR08", "color": "000039", "referencia": "2511TR08_000039", "desc_fam": "TRICOT HOMBRE", "subfamilia": "JERSEY", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 1}, {"article": "1812JA09", "color": "000019", "referencia": "1812JA09_000019", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 4}, {"article": "2112JA01", "color": "000015", "referencia": "2112JA01_000015", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2212JA01", "color": "000087", "referencia": "2212JA01_000087", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2212JA02", "color": "000015", "referencia": "2212JA02_000015", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 2}, {"article": "2212JA02", "color": "000087", "referencia": "2212JA02_000087", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 3}, {"article": "2212JA03", "color": "000003", "referencia": "2212JA03_000003", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2212JA05", "color": "000003", "referencia": "2212JA05_000003", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2212JA06", "color": "000003", "referencia": "2212JA06_000003", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 3}, {"article": "2212JA06", "color": "000015", "referencia": "2212JA06_000015", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2312JA08", "color": "000072", "referencia": "2312JA08_000072", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2312JA08", "color": "000087", "referencia": "2312JA08_000087", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "2412JA13", "color": "000015", "referencia": "2412JA13_000015", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 5}, {"article": "2412JA17", "color": "000003", "referencia": "2412JA17_000003", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "2412JA28", "color": "000001", "referencia": "2412JA28_000001", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 4}, {"article": "2512JA10", "color": "000003", "referencia": "2512JA10_000003", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 4}, {"article": "2512JA18", "color": "000002", "referencia": "2512JA18_000002", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 3}, {"article": "2512JA19", "color": "000005", "referencia": "2512JA19_000005", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 59.99, "sale": 33.99, "disc": 0.4334, "stock": 1}, {"article": "0725134", "color": "000006", "referencia": "0725134_000006", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CHALECO", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 1}, {"article": "2512ZC01", "color": "000003", "referencia": "2512ZC01_000003", "desc_fam": "CINTURONES MUJER", "subfamilia": "ANCHO", "pvp": 19.99, "sale": 10.99, "disc": 0.4502, "stock": 4}, {"article": "26BL03", "color": "000029", "referencia": "26BL03_000029", "desc_fam": "CINTURONES MUJER", "subfamilia": "REGULAR", "pvp": 17.99, "sale": 9.99, "disc": 0.4447, "stock": 5}, {"article": "2212PT07", "color": "000302", "referencia": "2212PT07_000302", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 11}, {"article": "2512PT00", "color": "000302", "referencia": "2512PT00_000302", "desc_fam": "PANTALON LARGO MUJER", "subfamilia": "JEANS", "pvp": 42.99, "sale": 26.99, "disc": 0.3722, "stock": 6}, {"article": "2512SU15", "color": "000030", "referencia": "2512SU15_000030", "desc_fam": "SUDADERA MUJER", "subfamilia": "HOODIE", "pvp": 35.99, "sale": 19.99, "disc": 0.4446, "stock": 9}, {"article": "2512SU13", "color": "000030", "referencia": "2512SU13_000030", "desc_fam": "SUDADERA MUJER", "subfamilia": "SUDADERA", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 21}, {"article": "2412TR88", "color": "000003", "referencia": "2412TR88_000003", "desc_fam": "TRICOT MUJER", "subfamilia": "CARDIGAN", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 1}, {"article": "2512TR85", "color": "000003", "referencia": "2512TR85_000003", "desc_fam": "TRICOT MUJER", "subfamilia": "CARDIGAN", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 18}, {"article": "2512TR89", "color": "000003", "referencia": "2512TR89_000003", "desc_fam": "TRICOT MUJER", "subfamilia": "CARDIGAN", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 14}, {"article": "2512TR01", "color": "000323", "referencia": "2512TR01_000323", "desc_fam": "TRICOT MUJER", "subfamilia": "JERSEY", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 2}, {"article": "2512TR06", "color": "000323", "referencia": "2512TR06_000323", "desc_fam": "TRICOT MUJER", "subfamilia": "JERSEY", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 10}, {"article": "2512TR11", "color": "000087", "referencia": "2512TR11_000087", "desc_fam": "TRICOT MUJER", "subfamilia": "JERSEY", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 9}, {"article": "2512TR20", "color": "000323", "referencia": "2512TR20_000323", "desc_fam": "TRICOT MUJER", "subfamilia": "JERSEY", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 15}, {"article": "2512TR23", "color": "000030", "referencia": "2512TR23_000030", "desc_fam": "TRICOT MUJER", "subfamilia": "JERSEY", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 2}, {"article": "1911JA71", "color": "000015", "referencia": "1911JA71_000015", "desc_fam": "CHAQUETA HOMBRE", "subfamilia": "PLUMIFERO", "pvp": 49.99, "sale": 27.99, "disc": 0.4401, "stock": 1}, {"article": "24978", "color": "000087", "referencia": "24978_000087", "desc_fam": "CHAQUETA MUJER", "subfamilia": "CAZADORA", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 2}, {"article": "2414MC01", "color": "000081", "referencia": "2414MC01_000081", "desc_fam": "CAMISETA MANGA CORTA BOY", "subfamilia": "CAMISETA MANGA CORTA", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 11}, {"article": "2414MC02", "color": "000006", "referencia": "2414MC02_000006", "desc_fam": "CAMISETA MANGA CORTA BOY", "subfamilia": "CAMISETA MANGA CORTA", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 7}, {"article": "2414MC04", "color": "000014", "referencia": "2414MC04_000014", "desc_fam": "CAMISETA MANGA CORTA BOY", "subfamilia": "CAMISETA MANGA CORTA", "pvp": 7.99, "sale": 4.99, "disc": 0.3755, "stock": 9}, {"article": "2414MC07", "color": "000027", "referencia": "2414MC07_000027", "desc_fam": "CAMISETA MANGA CORTA BOY", "subfamilia": "CAMISETA MANGA CORTA", "pvp": 7.99, "sale": 4.99, "disc": 0.3755, "stock": 7}, {"article": "2414MC13", "color": "000001", "referencia": "2414MC13_000001", "desc_fam": "CAMISETA MANGA CORTA BOY", "subfamilia": "CAMISETA MANGA CORTA", "pvp": 7.99, "sale": 4.99, "disc": 0.3755, "stock": 6}, {"article": "2415PS01", "color": "000016", "referencia": "2415PS01_000016", "desc_fam": "PANTALON CORTO GIRL", "subfamilia": "PUNTO", "pvp": 10.99, "sale": 5.99, "disc": 0.455, "stock": 1}, {"article": "2415TP04", "color": "000010", "referencia": "2415TP04_000010", "desc_fam": "TOP GIRL", "subfamilia": "TOP", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 3}, {"article": "2415TP09", "color": "000001", "referencia": "2415TP09_000001", "desc_fam": "TOP GIRL", "subfamilia": "TOP", "pvp": 9.99, "sale": 5.99, "disc": 0.4004, "stock": 1}, {"article": "2415TP12", "color": "000016", "referencia": "2415TP12_000016", "desc_fam": "TOP GIRL", "subfamilia": "TOP", "pvp": 10.99, "sale": 5.99, "disc": 0.455, "stock": 8}, {"article": "2415TP13", "color": "000006", "referencia": "2415TP13_000006", "desc_fam": "TOP GIRL", "subfamilia": "TOP", "pvp": 10.99, "sale": 5.99, "disc": 0.455, "stock": 2}, {"article": "2415TP14", "color": "000323", "referencia": "2415TP14_000323", "desc_fam": "TOP GIRL", "subfamilia": "TOP", "pvp": 10.99, "sale": 5.99, "disc": 0.455, "stock": 8}, {"article": "2311CC32", "color": "000008", "referencia": "2311CC32_000008", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 32.99, "sale": 20.99, "disc": 0.3637, "stock": 1}, {"article": "2411CC08", "color": "000001", "referencia": "2411CC08_000001", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 3}, {"article": "2411CC37", "color": "000030", "referencia": "2411CC37_000030", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 2}, {"article": "2411CC37", "color": "000039", "referencia": "2411CC37_000039", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 1}, {"article": "2411CC41", "color": "000039", "referencia": "2411CC41_000039", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 2}, {"article": "2411CC47", "color": "000003", "referencia": "2411CC47_000003", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 18.99, "disc": 0.3668, "stock": 3}, {"article": "2411CC47", "color": "000016", "referencia": "2411CC47_000016", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 5}, {"article": "2411CC47", "color": "000145", "referencia": "2411CC47_000145", "desc_fam": "CAMISA MANGA CORTA HOMBRE", "subfamilia": "CASUAL", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 2}, {"article": "2311MC47", "color": "000147", "referencia": "2311MC47_000147", "desc_fam": "CAMISETA MANGA CORTA HOMBRE", "subfamilia": "CREW", "pvp": 19.99, "sale": 10.99, "disc": 0.4502, "stock": 8}, {"article": "2311PS11", "color": "000014", "referencia": "2311PS11_000014", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "CARGO", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "2311PS12", "color": "000160", "referencia": "2311PS12_000160", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "CARGO", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 2}, {"article": "2411PS11", "color": "000003", "referencia": "2411PS11_000003", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "CARGO", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "2411PS13", "color": "000039", "referencia": "2411PS13_000039", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "CARGO", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 3}, {"article": "2411PS70", "color": "000300", "referencia": "2411PS70_000300", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "CARGO", "pvp": 42.99, "sale": 23.99, "disc": 0.442, "stock": 2}, {"article": "2511PS08", "color": "000005", "referencia": "2511PS08_000005", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "CHINO", "pvp": 36.99, "sale": 22.99, "disc": 0.3785, "stock": 11}, {"article": "2011PS40", "color": "000300", "referencia": "2011PS40_000300", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 5}, {"article": "2211PS31", "color": "000302", "referencia": "2211PS31_000302", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 1}, {"article": "2311PS00", "color": "000087", "referencia": "2311PS00_000087", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 35.99, "sale": 19.99, "disc": 0.4446, "stock": 1}, {"article": "2311PS01", "color": "000013", "referencia": "2311PS01_000013", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 2}, {"article": "2311PS28", "color": "000301", "referencia": "2311PS28_000301", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 4}, {"article": "2311PS35", "color": "000321", "referencia": "2311PS35_000321", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 36.99, "sale": 20.99, "disc": 0.4325, "stock": 1}, {"article": "2411PS01", "color": "000006", "referencia": "2411PS01_000006", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 36.99, "sale": 22.99, "disc": 0.3785, "stock": 2}, {"article": "2411PS02", "color": "000061", "referencia": "2411PS02_000061", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 3}, {"article": "2411PS02", "color": "000139", "referencia": "2411PS02_000139", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 6}, {"article": "2411PS20", "color": "000302", "referencia": "2411PS20_000302", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 2}, {"article": "2411PS28", "color": "000301", "referencia": "2411PS28_000301", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 8}, {"article": "2511PS20", "color": "000302", "referencia": "2511PS20_000302", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 4}, {"article": "2511PS21", "color": "000300", "referencia": "2511PS21_000300", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 8}, {"article": "2511PS46", "color": "000301", "referencia": "2511PS46_000301", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "JEANS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 7}, {"article": "2411PS81", "color": "000300", "referencia": "2411PS81_000300", "desc_fam": "PANTALON CORTO HOMBRE", "subfamilia": "PIRATA", "pvp": 45.99, "sale": 25.99, "disc": 0.4349, "stock": 3}, {"article": "2311PC34", "color": "000039", "referencia": "2311PC34_000039", "desc_fam": "POLO MANGA CORTA HOMBRE", "subfamilia": "NORMAL", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 3}, {"article": "2312BL62", "color": "000323", "referencia": "2312BL62_000323", "desc_fam": "BLUSAS", "subfamilia": "SIN MANGAS", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 3}, {"article": "2012PS09", "color": "000301", "referencia": "2012PS09_000301", "desc_fam": "PANTALON CORTO MUJER", "subfamilia": "PIRATA", "pvp": 39.99, "sale": 24.99, "disc": 0.3751, "stock": 1}, {"article": "24818", "color": "000029", "referencia": "24818_000029", "desc_fam": "PANTALON CORTO MUJER", "subfamilia": "SHORT", "pvp": 21.99, "sale": 11.99, "disc": 0.4548, "stock": 1}, {"article": "2112TP22", "color": "000029", "referencia": "2112TP22_000029", "desc_fam": "TOP MUJER", "subfamilia": "MANGA CORTA", "pvp": 22.99, "sale": 12.99, "disc": 0.435, "stock": 6}, {"article": "2412TP19", "color": "000039", "referencia": "2412TP19_000039", "desc_fam": "TOP MUJER", "subfamilia": "T-TSHIRT", "pvp": 19.99, "sale": 10.99, "disc": 0.4502, "stock": 1}, {"article": "2412VS29", "color": "000323", "referencia": "2412VS29_000323", "desc_fam": "VESTIDOS", "subfamilia": "MONO MANGA CORTA", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 2}, {"article": "2412VS84", "color": "000017", "referencia": "2412VS84_000017", "desc_fam": "VESTIDOS", "subfamilia": "MONO TIRANTES", "pvp": 32.99, "sale": 20.99, "disc": 0.3637, "stock": 1}, {"article": "2412VS84", "color": "000039", "referencia": "2412VS84_000039", "desc_fam": "VESTIDOS", "subfamilia": "MONO TIRANTES", "pvp": 32.99, "sale": 20.99, "disc": 0.3637, "stock": 1}, {"article": "2312VS56", "color": "000003", "referencia": "2312VS56_000003", "desc_fam": "VESTIDOS", "subfamilia": "SIN MANGAS", "pvp": 35.99, "sale": 19.99, "disc": 0.4446, "stock": 2}, {"article": "2412VS40", "color": "000323", "referencia": "2412VS40_000323", "desc_fam": "VESTIDOS", "subfamilia": "SIN MANGAS", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 1}, {"article": "2412VS43", "color": "000003", "referencia": "2412VS43_000003", "desc_fam": "VESTIDOS", "subfamilia": "SIN MANGAS", "pvp": 29.99, "sale": 16.99, "disc": 0.4335, "stock": 2}, {"article": "2412VS54", "color": "000301", "referencia": "2412VS54_000301", "desc_fam": "VESTIDOS", "subfamilia": "SIN MANGAS", "pvp": 39.99, "sale": 21.99, "disc": 0.4501, "stock": 2}, {"article": "2412VS98", "color": "000003", "referencia": "2412VS98_000003", "desc_fam": "VESTIDOS", "subfamilia": "TIRANTES", "pvp": 35.99, "sale": 21.99, "disc": 0.389, "stock": 1}];
+
+// Populate family filter
+const families = [...new Set(ALL_ITEMS.map(i => i.desc_fam))].sort();
+const famSel = document.getElementById('fam-select');
+families.forEach(f => {
+    const o = document.createElement('option');
+    o.value = f; o.textContent = f;
+    famSel.appendChild(o);
+});
+
+function getFiltered() {
+    const fam = famSel.value;
+    const q = document.getElementById('search-input').value.toLowerCase().trim();
+    return ALL_ITEMS.filter(i => {
+        if (fam && i.desc_fam !== fam) return false;
+        if (q && !i.referencia.toLowerCase().includes(q) &&
+                 !i.article.toLowerCase().includes(q) &&
+                 !i.subfamilia.toLowerCase().includes(q) &&
+                 !i.desc_fam.toLowerCase().includes(q)) return false;
+        return true;
+    });
+}
+
+function render() {
+    const items = getFiltered();
+    const totalUnits = items.reduce((s, i) => s + i.stock, 0);
+    const avgDisc = items.length ? Math.round(items.reduce((s, i) => s + i.disc, 0) / items.length * 100) : 0;
+
+    document.getElementById('stat-items').textContent = items.length;
+    document.getElementById('stat-units').textContent = totalUnits.toLocaleString('es-ES');
+    document.getElementById('stat-disc').textContent = avgDisc + '%';
+
+    const grid = document.getElementById('grid');
+    if (!items.length) {
+        grid.innerHTML = '<p style="color:#555;grid-column:1/-1;padding:40px 0;text-align:center">No hay artículos con estos filtros</p>';
+        return;
+    }
+
+    grid.innerHTML = items.map(item => {
+        const discPct = item.disc > 0 ? Math.round(item.disc * 100) : 0;
+        const imgUrl = `https://koroshishop.com/cdn/shop/files/${item.referencia}_1.jpg`;
+        return `
+        <div class="card">
+            <div class="image-wrapper">
+                <img src="${imgUrl}" alt="${item.referencia}" class="image"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div class="no-image" style="display:none">Sin imagen</div>
+                <div class="stock-badge">${item.stock} uds</div>
+            </div>
+            <div class="info">
+                <div class="familia">${item.desc_fam}</div>
+                <div class="subfam">${item.subfamilia}</div>
+                <div class="article-ref">${item.article} · ${item.color}</div>
+                <div class="prices">
+                    <div class="price-row">
+                        <span class="price-label">PVP</span>
+                        <span class="pvp-val">€${item.pvp.toFixed(2)}</span>
+                    </div>
+                    <div class="price-row">
+                        <span class="sale-val">€${item.sale.toFixed(2)}</span>
+                        ${discPct > 0 ? `<span class="disc-badge">-${discPct}%</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+famSel.addEventListener('change', render);
+document.getElementById('search-input').addEventListener('input', render);
+
+// Download Excel
+document.getElementById('download-btn').addEventListener('click', () => {
+    const items = getFiltered();
+    const data = items.map(i => ({
+        'Artículo': i.article, 'Color': i.color, 'Referencia': i.referencia,
+        'Familia': i.desc_fam, 'Subfamilia': i.subfamilia,
+        'Stock': i.stock, 'PVP Original': i.pvp,
+        'Precio Rebaja': i.sale, 'Descuento %': (i.disc * 100).toFixed(1)
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = [10,8,20,25,20,8,12,12,10].map(w => ({ wch: w }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'K80 Midseason');
+    XLSX.writeFile(wb, 'Midseason_Sale_K80_GranJonquera.xlsx');
+});
+
+// Download CSV
+document.getElementById('download-csv').addEventListener('click', () => {
+    const items = getFiltered();
+    let csv = 'Artículo;Color;Referencia;Familia;Subfamilia;Stock;PVP Original;Precio Rebaja;Descuento %\n';
+    items.forEach(i => {
+        csv += [i.article, i.color, i.referencia, i.desc_fam, i.subfamilia,
+                i.stock, i.pvp, i.sale, (i.disc*100).toFixed(1)].join(';') + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Midseason_Sale_K80_GranJonquera.csv';
+    a.click();
+});
+
+// Init
+render();
+</script>
+
+<!-- Password overlay -->
+<div id="pw-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);display:flex;justify-content:center;align-items:center;z-index:9999;font-family:Arial,sans-serif;">
+    <div style="background:#1a1a1a;border:1px solid #333;padding:40px;border-radius:10px;box-shadow:0 0 30px rgba(0,0,0,0.5);text-align:center;max-width:380px;width:90%;">
+        <div style="font-size:32px;margin-bottom:16px;">🔒</div>
+        <h2 style="color:#fff;margin-bottom:8px;font-size:20px;">Koroshi Dashboard</h2>
+        <p style="color:#777;margin-bottom:24px;font-size:13px;">Midseason Sale V26 · K80 Gran Jonquera</p>
+        <input type="password" id="pw-input" placeholder="Contraseña"
+               style="width:100%;padding:11px 14px;border:1px solid #333;border-radius:6px;font-size:15px;margin-bottom:14px;box-sizing:border-box;background:#111;color:#fff;outline:none;">
+        <button onclick="checkPw()" style="width:100%;padding:11px;background:#e74c3c;color:white;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:700;">Acceder</button>
+        <p style="color:#555;font-size:11px;margin-top:16px;">Contacta con Carla para obtener la contraseña</p>
+    </div>
+</div>
+
+<script>
+const PW = "koroshi2026";
+function checkPw() {
+    if (document.getElementById('pw-input').value === PW) {
+        sessionStorage.setItem('koroshi-auth', 'true');
+        document.getElementById('pw-overlay').style.display = 'none';
+    } else {
+        alert('Contraseña incorrecta');
+        document.getElementById('pw-input').value = '';
+    }
+}
+document.getElementById('pw-input').addEventListener('keypress', e => { if (e.key === 'Enter') checkPw(); });
+window.addEventListener('load', () => {
+    if (sessionStorage.getItem('koroshi-auth') !== 'true')
+        document.getElementById('pw-overlay').style.display = 'flex';
+});
+</script>
+
+</body>
+</html>
