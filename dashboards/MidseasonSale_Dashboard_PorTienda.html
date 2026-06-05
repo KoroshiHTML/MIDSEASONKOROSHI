@@ -406,7 +406,7 @@ document.getElementById('download-csv-btn').addEventListener('click', () => {
 const PW = "koroshi2026";
 function checkPw() {
     if (document.getElementById('pw-input').value === PW) {
-        localStorage.setItem('koroshi-dashboard-auth','true');
+        sessionStorage.setItem('koroshi-auth', 'true');
         document.getElementById('pw-overlay').style.display = 'none';
     } else {
         alert('Contraseña incorrecta');
@@ -415,8 +415,8 @@ function checkPw() {
 }
 document.getElementById('pw-input').addEventListener('keypress', e => { if (e.key === 'Enter') checkPw(); });
 window.addEventListener('load', () => {
-    if (localStorage.getItem('koroshi-dashboard-auth') === 'true')
-        document.getElementById('pw-overlay').style.display = 'none';
+    if (sessionStorage.getItem('koroshi-auth') !== 'true')
+        document.getElementById('pw-overlay').style.display = 'flex';
 });
 </script>
 
