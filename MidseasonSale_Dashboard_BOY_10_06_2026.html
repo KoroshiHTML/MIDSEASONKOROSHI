@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midseason Sale V26 BOY (10/06) - Koroshi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            max-width: 1600px;
+            margin: 0 auto 30px;
+            border-left: 5px solid #e74c3c;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .header > div:first-child {
+            flex: 1;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        #download-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        #download-csv-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            border-color: #e74c3c;
+            background: #222;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 120%;
+            background: #111;
+            overflow: hidden;
+        }
+
+        .image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .familia {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #f39c12;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .article {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .color {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .sexo {
+            font-size: 9px;
+            display: inline-block;
+            background: rgba(255,255,255,0.08);
+            padding: 2px 6px;
+            border-radius: 3px;
+            width: fit-content;
+        }
+
+        .prices {
+            border-top: 1px solid #222;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .price-label {
+            color: #999;
+        }
+
+        .precio-actual {
+            font-weight: 600;
+        }
+
+        .precio-rebaja {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .descuento {
+            background: #e74c3c;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 10px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #333;
+            border-top: 2px solid #e74c3c;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>👦 Midseason Sale V26 — BOY (10/06)</h1>
+            <p>Koroshi - Rebajas Spring/Summer 2026 (Updated: 10/06/2026)</p>
+        </div>
+        <div class="header-buttons">
+            <button id="download-btn">📥 Excel</button>
+            <button id="download-csv-btn">📄 CSV</button>
+        </div>
+    </div>
+
+    <div id="container">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Cargando catálogo...</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let items = [];
+
+        // Real data from REBAJAS_V26_06_05_2026_HOMBRE.xls
+        const saleData = [
+            {"article": "2614CC03", "color": "000039", "referencia": "2614CC03_000039", "familia": "CAMISA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 17.99, "precio_rebaja": 12.99, "descuento": -0.27793218454697044},
+            {"article": "2614MC01", "color": "000014", "referencia": "2614MC01_000014", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 15.99, "precio_rebaja": 12.99, "descuento": -0.18761726078799248},
+            {"article": "2614MC02", "color": "000003", "referencia": "2614MC02_000003", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 15.99, "precio_rebaja": 12.99, "descuento": -0.18761726078799248},
+            {"article": "2614MC04", "color": "000039", "referencia": "2614MC04_000039", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 12.99, "precio_rebaja": 9.99, "descuento": -0.23094688221709006},
+            {"article": "2614MC06", "color": "000123", "referencia": "2614MC06_000123", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 12.99, "precio_rebaja": 9.99, "descuento": -0.23094688221709006},
+            {"article": "2614MS02", "color": "000020", "referencia": "2614MS02_000020", "familia": "CAMISETAS SIN MANGAS BOY", "sexo": "BOY", "precio_actual": 12.99, "precio_rebaja": 9.99, "descuento": -0.23094688221709006},
+            {"article": "2614JA01", "color": "000139", "referencia": "2614JA01_000139", "familia": "CHAQUETA BOY", "sexo": "BOY", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2614JA02", "color": "000039", "referencia": "2614JA02_000039", "familia": "CHAQUETA BOY", "sexo": "BOY", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+        ];
+
+        function render() {
+            items = saleData;
+            const container = document.getElementById('container');
+            
+            container.innerHTML = `
+                <div class="grid">
+                    ${items.map(item => `
+                        <div class="card">
+                            <div class="image-wrapper">
+                                <img src="https://koroshishop.com/cdn/shop/files/${item.referencia}_1.jpg" alt="${item.referencia}" class="image" onerror="this.style.display='none'">
+                                <div class="placeholder">No imagen</div>
+                            </div>
+                            <div class="info">
+                                <div class="familia">${item.familia}</div>
+                                <div class="article">${item.article}</div>
+                                <div class="color">${item.referencia}</div>
+                                <div class="sexo">${item.sexo}</div>
+                                <div class="prices">
+                                    <div class="price-row">
+                                        <span class="price-label">PVP:</span>
+                                        <span class="precio-actual">€${item.precio_actual.toFixed(2)}</span>
+                                    </div>
+                                    <div class="price-row">
+                                        <span class="price-label">Rebaja:</span>
+                                        <span class="precio-rebaja">€${item.precio_rebaja.toFixed(2)}</span>
+                                        <span class="descuento">${(Math.abs(item.descuento) * 100).toFixed(0)}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Load on page ready
+        document.addEventListener('DOMContentLoaded', render);
+
+        // Download Excel function
+        document.getElementById('download-btn').addEventListener('click', function() {
+            try {
+                // Prepare data for Excel
+                const excelData = items.map(item => ({
+                    'Artículo': item.article,
+                    'Familia': item.familia,
+                    'Sexo': item.sexo,
+                    'Referencia': item.referencia,
+                    'Color': item.color,
+                    'Precio Actual': item.precio_actual,
+                    'Precio Rebaja': item.precio_rebaja,
+                    'Descuento %': (Math.abs(item.descuento) * 100).toFixed(2)
+                }));
+
+                // Create workbook
+                const ws = XLSX.utils.json_to_sheet(excelData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Midseason Sale");
+
+                // Set column widths
+                ws['!cols'] = [
+                    { wch: 15 },
+                    { wch: 25 },
+                    { wch: 12 },
+                    { wch: 20 },
+                    { wch: 10 },
+                    { wch: 15 },
+                    { wch: 15 },
+                    { wch: 12 }
+                ];
+
+                // Write file
+                XLSX.writeFile(wb, "Midseason_Sale_V26.xlsx");
+                console.log('Excel file downloaded successfully');
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Error downloading file. Please try again.');
+            }
+        });
+
+        // Download CSV function
+        document.getElementById('download-csv-btn').addEventListener('click', function() {
+            try {
+                const headers = ['Artículo', 'Familia', 'Sexo', 'Referencia', 'Color', 'Precio Actual', 'Precio Rebaja', 'Descuento %'];
+                
+                let csv = headers.join(';') + '\n';
+                
+                items.forEach(item => {
+                    csv += [
+                        item.article,
+                        item.familia,
+                        item.sexo,
+                        item.referencia,
+                        item.color,
+                        item.precio_actual,
+                        item.precio_rebaja,
+                        (Math.abs(item.descuento) * 100).toFixed(2)
+                    ].join(';') + '\n';
+                });
+
+                // Create blob and download
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'Midseason_Sale_V26.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                console.log('CSV file downloaded successfully');
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Error downloading file. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
