@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midseason Sale V26 - ALL - Koroshi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            max-width: 1600px;
+            margin: 0 auto 30px;
+            border-left: 5px solid #e74c3c;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .header > div:first-child {
+            flex: 1;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        #download-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        #download-csv-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            border-color: #e74c3c;
+            background: #222;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 120%;
+            background: #111;
+            overflow: hidden;
+        }
+
+        .image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .familia {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #f39c12;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .article {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .color {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .sexo {
+            font-size: 9px;
+            display: inline-block;
+            background: rgba(255,255,255,0.08);
+            padding: 2px 6px;
+            border-radius: 3px;
+            width: fit-content;
+        }
+
+        .prices {
+            border-top: 1px solid #222;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .price-label {
+            color: #999;
+        }
+
+        .precio-actual {
+            font-weight: 600;
+        }
+
+        .precio-rebaja {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .descuento {
+            background: #e74c3c;
+            color: white;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 10px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #333;
+            border-top: 2px solid #e74c3c;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>🏷️ Midseason Sale V26 — ALL CATEGORIES</h1>
+            <p>Koroshi - Complete Collection (HOMBRE, MUJER, BOY, GIRL) - Updated: 10/06/2026</p>
+        </div>
+        <div class="header-buttons">
+            <button id="download-btn">📥 Excel</button>
+            <button id="download-csv-btn">📄 CSV</button>
+        </div>
+    </div>
+
+    <div id="container">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Cargando catálogo...</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let items = [];
+
+        // Real data from REBAJAS_V26_06_05_2026_HOMBRE.xls
+        const saleData = [
+            {"article": "2614CC03", "color": "000039", "referencia": "2614CC03_000039", "familia": "CAMISA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 17.99, "precio_rebaja": 12.99, "descuento": -0.27793218454697044},
+            {"article": "2614MC01", "color": "000014", "referencia": "2614MC01_000014", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 15.99, "precio_rebaja": 12.99, "descuento": -0.18761726078799248},
+            {"article": "2614MC02", "color": "000003", "referencia": "2614MC02_000003", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 15.99, "precio_rebaja": 12.99, "descuento": -0.18761726078799248},
+            {"article": "2614MC04", "color": "000039", "referencia": "2614MC04_000039", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 12.99, "precio_rebaja": 9.99, "descuento": -0.23094688221709006},
+            {"article": "2614MC06", "color": "000123", "referencia": "2614MC06_000123", "familia": "CAMISETA MANGA CORTA BOY", "sexo": "BOY", "precio_actual": 12.99, "precio_rebaja": 9.99, "descuento": -0.23094688221709006},
+            {"article": "2614MS02", "color": "000020", "referencia": "2614MS02_000020", "familia": "CAMISETAS SIN MANGAS BOY", "sexo": "BOY", "precio_actual": 12.99, "precio_rebaja": 9.99, "descuento": -0.23094688221709006},
+            {"article": "2614JA01", "color": "000139", "referencia": "2614JA01_000139", "familia": "CHAQUETA BOY", "sexo": "BOY", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2614JA02", "color": "000039", "referencia": "2614JA02_000039", "familia": "CHAQUETA BOY", "sexo": "BOY", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2615JA01", "color": "000300", "referencia": "2615JA01_000300", "familia": "CHAQUETA GIRL", "sexo": "GIRL", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2615TP01", "color": "000001", "referencia": "2615TP01_000001", "familia": "TOP GIRL", "sexo": "GIRL", "precio_actual": 17.99, "precio_rebaja": 12.99, "descuento": -0.27793218454697044},
+            {"article": "2615TP04", "color": "000001", "referencia": "2615TP04_000001", "familia": "TOP GIRL", "sexo": "GIRL", "precio_actual": 15.99, "precio_rebaja": 12.99, "descuento": -0.18761726078799248},
+            {"article": "2615VS01", "color": "000059", "referencia": "2615VS01_000059", "familia": "VESTIDOS GIRL", "sexo": "GIRL", "precio_actual": 22.99, "precio_rebaja": 17.99, "descuento": -0.2174858634188778},
+            {"article": "2615VS02", "color": "000006", "referencia": "2615VS02_000006", "familia": "VESTIDOS GIRL", "sexo": "GIRL", "precio_actual": 19.99, "precio_rebaja": 15.99, "descuento": -0.20010005002501244},
+            {"article": "2615VS06", "color": "000323", "referencia": "2615VS06_000323", "familia": "VESTIDOS GIRL", "sexo": "GIRL", "precio_actual": 19.99, "precio_rebaja": 15.99, "descuento": -0.20010005002501244},
+            {"article": "2611CC32", "color": "000001", "referencia": "2611CC32_000001", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2611CC32", "color": "000006", "referencia": "2611CC32_000006", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 35.99, "precio_rebaja": 25.99, "descuento": -0.2778549597110309},
+            {"article": "2611CC32", "color": "000039", "referencia": "2611CC32_000039", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2611CC37", "color": "000030", "referencia": "2611CC37_000030", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611CC38", "color": "000323", "referencia": "2611CC38_000323", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 22.99, "descuento": -0.2334111370456819},
+            {"article": "2611CC40", "color": "000323", "referencia": "2611CC40_000323", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611CC41", "color": "000323", "referencia": "2611CC41_000323", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 22.99, "descuento": -0.2334111370456819},
+            {"article": "2611CC43", "color": "000006", "referencia": "2611CC43_000006", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 35.99, "precio_rebaja": 25.99, "descuento": -0.2778549597110309},
+            {"article": "2611CC46", "color": "000323", "referencia": "2611CC46_000323", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2611CC59", "color": "000128", "referencia": "2611CC59_000128", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611CC61", "color": "000014", "referencia": "2611CC61_000014", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2611CC62", "color": "000062", "referencia": "2611CC62_000062", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611CC64", "color": "000014", "referencia": "2611CC64_000014", "familia": "CAMISA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2611MC09", "color": "000123", "referencia": "2611MC09_000123", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2611MC12", "color": "000003", "referencia": "2611MC12_000003", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC14", "color": "000013", "referencia": "2611MC14_000013", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 22.99, "precio_rebaja": 19.99, "descuento": -0.13049151805132667},
+            {"article": "2611MC16", "color": "000003", "referencia": "2611MC16_000003", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2611MC22", "color": "000039", "referencia": "2611MC22_000039", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2611MC27", "color": "000147", "referencia": "2611MC27_000147", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2611MC29", "color": "000123", "referencia": "2611MC29_000123", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 22.99, "descuento": -0.11542901115813775},
+            {"article": "2611MC31", "color": "000039", "referencia": "2611MC31_000039", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC35", "color": "000015", "referencia": "2611MC35_000015", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC35", "color": "000039", "referencia": "2611MC35_000039", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC41", "color": "000014", "referencia": "2611MC41_000014", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611MC49", "color": "000014", "referencia": "2611MC49_000014", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 22.99, "precio_rebaja": 15.99, "descuento": -0.30448020878642884},
+            {"article": "2611MC63", "color": "000001", "referencia": "2611MC63_000001", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 22.99, "precio_rebaja": 15.99, "descuento": -0.30448020878642884},
+            {"article": "2611MC65", "color": "000003", "referencia": "2611MC65_000003", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2611MC74", "color": "000015", "referencia": "2611MC74_000015", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 22.99, "precio_rebaja": 15.99, "descuento": -0.30448020878642884},
+            {"article": "2611MC75", "color": "000123", "referencia": "2611MC75_000123", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC76", "color": "000001", "referencia": "2611MC76_000001", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 22.99, "precio_rebaja": 15.99, "descuento": -0.30448020878642884},
+            {"article": "2611MC79", "color": "000003", "referencia": "2611MC79_000003", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC80", "color": "000003", "referencia": "2611MC80_000003", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2611MC81", "color": "000019", "referencia": "2611MC81_000019", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC82", "color": "000014", "referencia": "2611MC82_000014", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 25.99, "precio_rebaja": 15.99, "descuento": -0.3847633705271258},
+            {"article": "2611MC86", "color": "000030", "referencia": "2611MC86_000030", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 22.99, "precio_rebaja": 15.99, "descuento": -0.30448020878642884},
+            {"article": "2611MC90", "color": "000039", "referencia": "2611MC90_000039", "familia": "CAMISETA MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611JA23", "color": "000003", "referencia": "2611JA23_000003", "familia": "CHAQUETA HOMBRE", "sexo": "HOMBRE", "precio_actual": 49.99, "precio_rebaja": 39.99, "descuento": -0.20004000800160032},
+            {"article": "2611PS00", "color": "000010", "referencia": "2611PS00_000010", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 36.99, "precio_rebaja": 29.99, "descuento": -0.18924033522573677},
+            {"article": "2611PS00", "color": "000013", "referencia": "2611PS00_000013", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 36.99, "precio_rebaja": 29.99, "descuento": -0.18924033522573677},
+            {"article": "2611PS07", "color": "000001", "referencia": "2611PS07_000001", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 35.99, "descuento": -0.10002500625156288},
+            {"article": "2611PS07", "color": "000039", "referencia": "2611PS07_000039", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 35.99, "descuento": -0.10002500625156288},
+            {"article": "2611PS08", "color": "000005", "referencia": "2611PS08_000005", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 35.99, "descuento": -0.10002500625156288},
+            {"article": "2611PS46", "color": "000306", "referencia": "2611PS46_000306", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2611PS70", "color": "000302", "referencia": "2611PS70_000302", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 49.99, "precio_rebaja": 39.99, "descuento": -0.20004000800160032},
+            {"article": "2611PS91", "color": "000030", "referencia": "2611PS91_000030", "familia": "PANTALON CORTO HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611PT93", "color": "000062", "referencia": "2611PT93_000062", "familia": "PANTALON LARGO HOMBRE", "sexo": "HOMBRE", "precio_actual": 49.99, "precio_rebaja": 39.99, "descuento": -0.20004000800160032},
+            {"article": "2611PC19", "color": "000030", "referencia": "2611PC19_000030", "familia": "POLO MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2611PC23", "color": "000016", "referencia": "2611PC23_000016", "familia": "POLO MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 22.99, "descuento": -0.2334111370456819},
+            {"article": "2611PC23", "color": "000030", "referencia": "2611PC23_000030", "familia": "POLO MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611PC23", "color": "000147", "referencia": "2611PC23_000147", "familia": "POLO MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611PC25", "color": "000003", "referencia": "2611PC25_000003", "familia": "POLO MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611PC28", "color": "000003", "referencia": "2611PC28_000003", "familia": "POLO MANGA CORTA HOMBRE", "sexo": "HOMBRE", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2611TR12", "color": "000039", "referencia": "2611TR12_000039", "familia": "TRICOT HOMBRE", "sexo": "HOMBRE", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612BL00", "color": "000003", "referencia": "2612BL00_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2612BL05", "color": "000006", "referencia": "2612BL05_000006", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 22.99, "descuento": -0.2334111370456819},
+            {"article": "2612BL06", "color": "000006", "referencia": "2612BL06_000006", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2612BL09", "color": "000003", "referencia": "2612BL09_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 19.99, "descuento": -0.4445679355376494},
+            {"article": "2612BL11", "color": "000003", "referencia": "2612BL11_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 19.99, "descuento": -0.4445679355376494},
+            {"article": "2612BL11", "color": "000039", "referencia": "2612BL11_000039", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 19.99, "descuento": -0.4445679355376494},
+            {"article": "2612BL16", "color": "000323", "referencia": "2612BL16_000323", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2612BL23", "color": "000001", "referencia": "2612BL23_000001", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612BL23", "color": "000014", "referencia": "2612BL23_000014", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612BL23", "color": "000015", "referencia": "2612BL23_000015", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 35.99, "descuento": -0.10002500625156288},
+            {"article": "2612BL29", "color": "000003", "referencia": "2612BL29_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2612BL31", "color": "000001", "referencia": "2612BL31_000001", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 22.99, "descuento": -0.2334111370456819},
+            {"article": "2612BL38", "color": "000003", "referencia": "2612BL38_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612BL40", "color": "000001", "referencia": "2612BL40_000001", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612BL73", "color": "000014", "referencia": "2612BL73_000014", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612BL75", "color": "000323", "referencia": "2612BL75_000323", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 19.99, "descuento": -0.33344448149383127},
+            {"article": "2612BL76", "color": "000301", "referencia": "2612BL76_000301", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612BL81", "color": "000003", "referencia": "2612BL81_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2612BL81", "color": "000030", "referencia": "2612BL81_000030", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 22.99, "descuento": -0.2334111370456819},
+            {"article": "2612BL81", "color": "000323", "referencia": "2612BL81_000323", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2612BL99", "color": "000003", "referencia": "2612BL99_000003", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612BL99", "color": "000084", "referencia": "2612BL99_000084", "familia": "BLUSAS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 25.99, "descuento": -0.2778549597110309},
+            {"article": "2612ZB00", "color": "000003", "referencia": "2612ZB00_000003", "familia": "BOLSOS MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612ZB03", "color": "000019", "referencia": "2612ZB03_000019", "familia": "BOLSOS MUJER", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2612XC04", "color": "000003", "referencia": "2612XC04_000003", "familia": "CALZADO MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612XC05", "color": "000003", "referencia": "2612XC05_000003", "familia": "CALZADO MUJER", "sexo": "MUJER", "precio_actual": 49.99, "precio_rebaja": 39.99, "descuento": -0.20004000800160032},
+            {"article": "2612JA04", "color": "000015", "referencia": "2612JA04_000015", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 59.99, "precio_rebaja": 49.99, "descuento": -0.1666944490748458},
+            {"article": "2612JA10", "color": "000003", "referencia": "2612JA10_000003", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 59.99, "precio_rebaja": 39.99, "descuento": -0.3333888981496916},
+            {"article": "2612JA13", "color": "000019", "referencia": "2612JA13_000019", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 59.99, "precio_rebaja": 49.99, "descuento": -0.1666944490748458},
+            {"article": "2612JA16", "color": "000019", "referencia": "2612JA16_000019", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612JA18", "color": "000030", "referencia": "2612JA18_000030", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 49.99, "precio_rebaja": 39.99, "descuento": -0.20004000800160032},
+            {"article": "2612JA70", "color": "000003", "referencia": "2612JA70_000003", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 32.99, "precio_rebaja": 19.99, "descuento": -0.39405880569869667},
+            {"article": "2612JA70", "color": "000006", "referencia": "2612JA70_000006", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 32.99, "precio_rebaja": 22.99, "descuento": -0.3031221582297667},
+            {"article": "2612JA71", "color": "000003", "referencia": "2612JA71_000003", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612JA71", "color": "000015", "referencia": "2612JA71_000015", "familia": "CHAQUETA MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 19.99, "descuento": -0.4445679355376494},
+            {"article": "2612FA01", "color": "000306", "referencia": "2612FA01_000306", "familia": "FALDA MUJER", "sexo": "MUJER", "precio_actual": 29.99, "precio_rebaja": 25.99, "descuento": -0.13337779259753252},
+            {"article": "2612FA53", "color": "000001", "referencia": "2612FA53_000001", "familia": "FALDA MUJER", "sexo": "MUJER", "precio_actual": 49.99, "precio_rebaja": 39.99, "descuento": -0.20004000800160032},
+            {"article": "2612FA56", "color": "000003", "referencia": "2612FA56_000003", "familia": "FALDA MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 35.99, "descuento": -0.10002500625156288},
+            {"article": "2612PS45", "color": "000003", "referencia": "2612PS45_000003", "familia": "PANTALON CORTO MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612PS45", "color": "000015", "referencia": "2612PS45_000015", "familia": "PANTALON CORTO MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 25.99, "descuento": -0.2778549597110309},
+            {"article": "2612PS58", "color": "000300", "referencia": "2612PS58_000300", "familia": "PANTALON CORTO MUJER", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612PT01", "color": "000001", "referencia": "2612PT01_000001", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612PT08", "color": "000030", "referencia": "2612PT08_000030", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 45.99, "precio_rebaja": 39.99, "descuento": -0.1304631441617743},
+            {"article": "2612PT09", "color": "000302", "referencia": "2612PT09_000302", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 42.99, "precio_rebaja": 35.99, "descuento": -0.16282856478250754},
+            {"article": "2612PT13", "color": "000301", "referencia": "2612PT13_000301", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612PT15", "color": "000001", "referencia": "2612PT15_000001", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612PT25", "color": "000300", "referencia": "2612PT25_000300", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 42.99, "precio_rebaja": 35.99, "descuento": -0.16282856478250754},
+            {"article": "2612PT26", "color": "000301", "referencia": "2612PT26_000301", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612PT27", "color": "000301", "referencia": "2612PT27_000301", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 35.99, "descuento": -0.10002500625156288},
+            {"article": "2612PT84", "color": "000014", "referencia": "2612PT84_000014", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612PT90", "color": "000003", "referencia": "2612PT90_000003", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612PT90", "color": "000015", "referencia": "2612PT90_000015", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612PT95", "color": "000001", "referencia": "2612PT95_000001", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612PT95", "color": "000003", "referencia": "2612PT95_000003", "familia": "PANTALON LARGO MUJER", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612TP08", "color": "000003", "referencia": "2612TP08_000003", "familia": "TOP MUJER", "sexo": "MUJER", "precio_actual": 22.99, "precio_rebaja": 19.99, "descuento": -0.13049151805132667},
+            {"article": "2612TP14", "color": "000001", "referencia": "2612TP14_000001", "familia": "TOP MUJER", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612TP20", "color": "000030", "referencia": "2612TP20_000030", "familia": "TOP MUJER", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612TP31", "color": "000030", "referencia": "2612TP31_000030", "familia": "TOP MUJER", "sexo": "MUJER", "precio_actual": 25.99, "precio_rebaja": 19.99, "descuento": -0.2308580223162755},
+            {"article": "2612TP80", "color": "000001", "referencia": "2612TP80_000001", "familia": "TOP MUJER", "sexo": "MUJER", "precio_actual": 22.99, "precio_rebaja": 17.99, "descuento": -0.2174858634188778},
+            {"article": "2612TP80", "color": "000014", "referencia": "2612TP80_000014", "familia": "TOP MUJER", "sexo": "MUJER", "precio_actual": 22.99, "precio_rebaja": 17.99, "descuento": -0.2174858634188778},
+            {"article": "2612VS06", "color": "000323", "referencia": "2612VS06_000323", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 45.99, "precio_rebaja": 35.99, "descuento": -0.21743857360295715},
+            {"article": "2612VS15", "color": "000003", "referencia": "2612VS15_000003", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612VS16", "color": "000323", "referencia": "2612VS16_000323", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612VS19", "color": "000003", "referencia": "2612VS19_000003", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612VS25", "color": "000323", "referencia": "2612VS25_000323", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 25.99, "descuento": -0.2778549597110309},
+            {"article": "2612VS32", "color": "000323", "referencia": "2612VS32_000323", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 45.99, "precio_rebaja": 29.99, "descuento": -0.3479017177647315},
+            {"article": "2612VS49", "color": "000015", "referencia": "2612VS49_000015", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 36.99, "precio_rebaja": 29.99, "descuento": -0.18924033522573677},
+            {"article": "2612VS63", "color": "000003", "referencia": "2612VS63_000003", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+            {"article": "2612VS79", "color": "000005", "referencia": "2612VS79_000005", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 45.99, "precio_rebaja": 35.99, "descuento": -0.21743857360295715},
+            {"article": "2612VS89", "color": "000006", "referencia": "2612VS89_000006", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 35.99, "precio_rebaja": 29.99, "descuento": -0.1667129758266186},
+            {"article": "2612VS90", "color": "000003", "referencia": "2612VS90_000003", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 45.99, "precio_rebaja": 35.99, "descuento": -0.21743857360295715},
+            {"article": "2612VS94", "color": "000003", "referencia": "2612VS94_000003", "familia": "VESTIDOS", "sexo": "MUJER", "precio_actual": 39.99, "precio_rebaja": 29.99, "descuento": -0.2500625156289073},
+        ];
+
+        function render() {
+            items = saleData;
+            const container = document.getElementById('container');
+            
+            container.innerHTML = `
+                <div class="grid">
+                    ${items.map(item => `
+                        <div class="card">
+                            <div class="image-wrapper">
+                                <img src="https://koroshishop.com/cdn/shop/files/${item.referencia}_1.jpg" alt="${item.referencia}" class="image" onerror="this.style.display='none'">
+                                <div class="placeholder">No imagen</div>
+                            </div>
+                            <div class="info">
+                                <div class="familia">${item.familia}</div>
+                                <div class="article">${item.article}</div>
+                                <div class="color">${item.referencia}</div>
+                                <div class="sexo">${item.sexo}</div>
+                                <div class="prices">
+                                    <div class="price-row">
+                                        <span class="price-label">PVP:</span>
+                                        <span class="precio-actual">€${item.precio_actual.toFixed(2)}</span>
+                                    </div>
+                                    <div class="price-row">
+                                        <span class="price-label">Rebaja:</span>
+                                        <span class="precio-rebaja">€${item.precio_rebaja.toFixed(2)}</span>
+                                        <span class="descuento">${(Math.abs(item.descuento) * 100).toFixed(0)}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Load on page ready
+        document.addEventListener('DOMContentLoaded', render);
+
+        // Download Excel function
+        document.getElementById('download-btn').addEventListener('click', function() {
+            try {
+                // Prepare data for Excel
+                const excelData = items.map(item => ({
+                    'Artículo': item.article,
+                    'Familia': item.familia,
+                    'Sexo': item.sexo,
+                    'Referencia': item.referencia,
+                    'Color': item.color,
+                    'Precio Actual': item.precio_actual,
+                    'Precio Rebaja': item.precio_rebaja,
+                    'Descuento %': (Math.abs(item.descuento) * 100).toFixed(2)
+                }));
+
+                // Create workbook
+                const ws = XLSX.utils.json_to_sheet(excelData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Midseason Sale");
+
+                // Set column widths
+                ws['!cols'] = [
+                    { wch: 15 },
+                    { wch: 25 },
+                    { wch: 12 },
+                    { wch: 20 },
+                    { wch: 10 },
+                    { wch: 15 },
+                    { wch: 15 },
+                    { wch: 12 }
+                ];
+
+                // Write file
+                XLSX.writeFile(wb, "Midseason_Sale_V26.xlsx");
+                console.log('Excel file downloaded successfully');
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Error downloading file. Please try again.');
+            }
+        });
+
+        // Download CSV function
+        document.getElementById('download-csv-btn').addEventListener('click', function() {
+            try {
+                const headers = ['Artículo', 'Familia', 'Sexo', 'Referencia', 'Color', 'Precio Actual', 'Precio Rebaja', 'Descuento %'];
+                
+                let csv = headers.join(';') + '\n';
+                
+                items.forEach(item => {
+                    csv += [
+                        item.article,
+                        item.familia,
+                        item.sexo,
+                        item.referencia,
+                        item.color,
+                        item.precio_actual,
+                        item.precio_rebaja,
+                        (Math.abs(item.descuento) * 100).toFixed(2)
+                    ].join(';') + '\n';
+                });
+
+                // Create blob and download
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'Midseason_Sale_V26.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                console.log('CSV file downloaded successfully');
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Error downloading file. Please try again.');
+            }
+        });
+    </script>
+
+    <div id="password-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; font-family: Arial, sans-serif;">
+        <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.3); text-align: center; max-width: 400px;">
+            <h2 style="color: #333; margin-bottom: 20px;">🔒 Koroshi Dashboard</h2>
+            <p style="color: #666; margin-bottom: 20px;">This dashboard is password protected.</p>
+            <input type="password" id="password-input" placeholder="Enter password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; margin-bottom: 15px; box-sizing: border-box;">
+            <button onclick="checkPassword()" style="width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">Access Dashboard</button>
+            <p style="color: #999; font-size: 12px; margin-top: 15px;">Contact Carla for password: carla@koroshi.com</p>
+        </div>
+    </div>
+
+    <script>
+        const correctPassword = "koroshi2026";
+        
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            if (input === correctPassword) {
+                localStorage.setItem('koroshi-dashboard-auth', 'true');
+                document.getElementById('password-overlay').style.display = 'none';
+            } else {
+                alert('Incorrect password. Please try again.');
+                document.getElementById('password-input').value = '';
+            }
+        }
+        
+        // Allow Enter key
+        document.getElementById('password-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // Check if already authenticated
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('koroshi-dashboard-auth') === 'true') {
+                document.getElementById('password-overlay').style.display = 'none';
+            }
+        });
+    </script>
+    
+</body>
+</html>
