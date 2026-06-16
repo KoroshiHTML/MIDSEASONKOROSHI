@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glosario visual · Panel de Cobertura de Stock · Koroshi</title>
+<style>
+  :root{
+    --blue:#1a56db; --orange:#d97706; --green:#0f6e56; --red:#c41e3a;
+    --ink:#1a1a1a; --bg:#f8f9fa; --muted:#666; --line:#e5e5e5; --card:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+  /* ---- header ---- */
+  header.top{padding:2.25rem 0 1.5rem;border-bottom:3px solid var(--ink);margin-bottom:1.5rem}
+  .logo{font-size:1.4rem;font-weight:800;letter-spacing:.18em}
+  header.top h1{font-size:2.1rem;font-weight:800;margin:.6rem 0 .3rem;line-height:1.1}
+  header.top p{color:var(--muted);font-size:.95rem;max-width:62ch}
+  .pill{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+        background:#eff6ff;color:var(--blue);border-radius:999px;padding:.25rem .7rem;margin-top:.9rem}
+
+  /* ---- in-page nav ---- */
+  nav.toc{position:sticky;top:0;z-index:10;background:rgba(248,249,250,.92);backdrop-filter:blur(6px);
+          display:flex;flex-wrap:wrap;gap:.4rem;padding:.7rem 0;margin-bottom:1.75rem;border-bottom:1px solid var(--line)}
+  nav.toc a{font-size:.78rem;font-weight:600;color:var(--muted);text-decoration:none;
+            border:1px solid var(--line);background:var(--card);border-radius:6px;padding:.32rem .65rem;white-space:nowrap}
+  nav.toc a:hover{border-color:var(--ink);color:var(--ink)}
+
+  /* ---- sections ---- */
+  section{margin-bottom:2.75rem;scroll-margin-top:4rem}
+  .sec-head{display:flex;align-items:baseline;gap:.7rem;margin-bottom:1rem;padding-bottom:.4rem;border-bottom:1px solid var(--line)}
+  .sec-num{font-size:.8rem;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
+  .sec-head h2{font-size:1.35rem;font-weight:700}
+  .sec-intro{color:var(--muted);font-size:.92rem;margin:-.4rem 0 1.1rem;max-width:70ch}
+
+  /* entry = visual example + explanation */
+  .entry{display:grid;grid-template-columns:230px 1fr;gap:1.1rem;align-items:start;
+         background:var(--card);border:1px solid var(--line);border-radius:10px;
+         padding:1rem 1.1rem;margin-bottom:.7rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .entry .demo{display:flex;align-items:center;justify-content:center;min-height:64px}
+  .entry .txt .name{font-weight:700;font-size:.98rem;margin-bottom:.15rem}
+  .entry .txt .desc{font-size:.88rem;color:#333}
+  .entry .txt code{background:#f1f3f5;border-radius:4px;padding:.05rem .35rem;font-size:.82rem;color:#0b3ea8}
+  .formula{display:inline-block;margin-top:.5rem;font-size:.82rem;background:#f8f9fa;border:1px dashed #cbd5e1;
+           border-radius:6px;padding:.3rem .55rem;color:#334155}
+
+  /* ---- replicated dashboard components (must match the panel 1:1) ---- */
+  .metric-card{background:var(--card);border-radius:10px;padding:1rem;box-shadow:0 2px 8px rgba(0,0,0,.06);
+               border-left:4px solid var(--ink);width:200px}
+  .metric-card.green{border-left-color:var(--green)} .metric-card.red{border-left-color:var(--red)}
+  .metric-card.blue{border-left-color:var(--blue)} .metric-card.orange{border-left-color:var(--orange)}
+  .metric-label{font-size:.66rem;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:.4rem}
+  .metric-value{font-size:1.5rem;font-weight:700;margin-bottom:.2rem}
+  .metric-sub{font-size:.72rem;color:var(--muted)}
+  .metric-sub.positive{color:var(--green);font-weight:600} .metric-sub.negative{color:var(--red);font-weight:600}
+
+  .ftog{background:var(--card);border:1px solid #ddd;border-radius:6px;padding:.4rem .75rem;font-size:.78rem;
+        font-weight:600;color:#555}
+  .ftog.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .ftog.pareto{background:#fffbeb;border-color:var(--orange);color:var(--orange)}
+  .ftog.pareto.active{background:var(--orange);color:#fff}
+  .ms-btn{background:var(--card);border:1px solid #ddd;border-radius:6px;padding:.38rem .6rem;font-size:.85rem;
+          display:inline-flex;justify-content:space-between;align-items:center;gap:.4rem;min-width:130px}
+  .ms-btn.active{border-color:var(--blue);background:#eff6ff;color:var(--blue);font-weight:600}
+  .ms-badge{background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:.7rem;font-weight:700}
+  .btn-reset{background:var(--card);border:1px solid #ddd;border-radius:6px;padding:.4rem .9rem;font-size:.78rem;color:#555}
+
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;padding:.15rem .55rem;border-radius:10px}
+  .badge-l4l{background:#dcfce7;color:#166534} .badge-comp{background:#fef3c7;color:#92400e}
+  .badge-outlet{background:#fee2e2;color:#991b1b}
+
+  .cov-bar-wrap{display:flex;align-items:center;gap:.4rem;width:170px}
+  .cov-bar{height:6px;border-radius:3px;flex:1;background:#f0f0f0;overflow:hidden}
+  .cov-fill{height:100%;border-radius:3px}
+  .cov-text{font-weight:700;font-size:.82rem;min-width:34px;text-align:right}
+  .cov-crit{color:var(--red)} .cov-warn{color:var(--orange)} .cov-ok{color:var(--green)} .cov-great{color:var(--blue)}
+  .positive{color:var(--green);font-weight:700} .negative{color:var(--red);font-weight:700}
+
+  .pcard{width:96px;text-align:center}
+  .pimg{width:100%;aspect-ratio:1;background:#e9edf2;border-radius:6px;margin-bottom:.25rem;
+        display:flex;align-items:center;justify-content:center;color:#9aa6b2;font-size:.62rem}
+  .pcard .info{font-size:.66rem;font-weight:700}
+  .pcard .sub{font-size:.6rem;color:#888}
+
+  /* coverage hero scale */
+  .cov-hero{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .cov-hero .lead{font-size:1rem;margin-bottom:1.1rem}
+  .cov-hero .lead b{color:var(--ink)}
+  .scale{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.4rem}
+  .band{border-radius:8px;padding:.85rem .75rem;color:#fff}
+  .band .rng{font-weight:800;font-size:1.05rem}
+  .band .tag{font-size:.78rem;font-weight:600;opacity:.95}
+  .band .note{font-size:.72rem;opacity:.9;margin-top:.25rem}
+  .b-crit{background:var(--red)} .b-warn{background:var(--orange)} .b-ok{background:var(--green)} .b-great{background:var(--blue)}
+
+  .callout{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--orange);
+           border-radius:8px;padding:1rem 1.1rem;font-size:.9rem}
+  .callout b{color:#92400e}
+  .note{background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid var(--blue);
+        border-radius:8px;padding:1rem 1.1rem;font-size:.9rem;margin-top:.6rem}
+
+  table.ref{width:100%;border-collapse:collapse;font-size:.85rem;background:var(--card);
+            border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  table.ref th{background:#f5f5f5;text-align:left;font-size:.7rem;text-transform:uppercase;color:#555;
+               padding:.6rem .8rem;border-bottom:2px solid var(--line);font-weight:700}
+  table.ref td{padding:.55rem .8rem;border-bottom:1px solid #f0f0f0;vertical-align:top}
+  table.ref tr:last-child td{border-bottom:none}
+  table.ref td:first-child{font-weight:700;white-space:nowrap;color:var(--ink)}
+  table.ref .num{text-align:right;font-family:monospace}
+
+  footer{margin-top:3rem;padding-top:1.25rem;border-top:1px solid var(--line);font-size:.8rem;color:#999}
+
+  @media(max-width:680px){
+    .entry{grid-template-columns:1fr;gap:.7rem}
+    .entry .demo{justify-content:flex-start}
+    .scale{grid-template-columns:1fr 1fr}
+    header.top h1{font-size:1.7rem}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="logo">KOROSHI</div>
+    <h1>Glosario visual del panel de cobertura</h1>
+    <p>Guía rápida para Área Managers: qué significa cada indicador, filtro, sección y columna del Panel de Cobertura de Stock (WK22 / WK23 / WK24). Cada concepto se muestra tal y como aparece en pantalla.</p>
+    <span class="pill">Texto en negro · % verde (sube) / rojo (baja) · cobertura roja solo &lt; 1x</span>
+  </header>
+
+  <nav class="toc">
+    <a href="#conceptos">Conceptos base</a>
+    <a href="#cobertura">Cobertura</a>
+    <a href="#kpis">Indicadores</a>
+    <a href="#semana">Semanas</a>
+    <a href="#filtros">Filtros</a>
+    <a href="#secciones">Secciones</a>
+    <a href="#columnas">Columnas</a>
+    <a href="#nota">Nota clave</a>
+  </nav>
+
+  <!-- 1. CONCEPTOS BASE -->
+  <section id="conceptos">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Conceptos base</h2></div>
+    <p class="sec-intro">El vocabulario que se repite por todo el panel. Si entiendes esto, entiendes el resto.</p>
+
+    <div class="entry">
+      <div class="demo"><span style="font-weight:800;font-size:1.3rem;color:var(--ink)">Actual</span></div>
+      <div class="txt"><div class="name">Actual <span style="color:#aaa;font-weight:400">(este año)</span></div>
+        <div class="desc">Datos de <b>2026</b>: la semana o periodo en curso. Sustituye al término inglés «TY».</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><span style="font-weight:800;font-size:1.3rem;color:var(--ink)">Año Ant.</span></div>
+      <div class="txt"><div class="name">Año Ant. <span style="color:#aaa;font-weight:400">(año anterior)</span></div>
+        <div class="desc">La <b>misma semana de 2025</b>, para comparar como referencia. Sustituye al término inglés «LY».</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><span style="color:var(--ink);font-weight:700;font-size:1.1rem">5.366</span></div>
+      <div class="txt"><div class="name">Stock</div>
+        <div class="desc">Unidades físicas disponibles en la tienda en el momento de la foto (snapshot).</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><span style="font-weight:700;font-size:1.05rem">362&nbsp;u · €9.908</span></div>
+      <div class="txt"><div class="name">Uds. y €</div>
+        <div class="desc"><b>Uds.</b> = unidades vendidas. <b>€</b> = venta en euros, <b>IVA incluido</b>. Cada uno tiene su versión Actual y Año Ant.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo" style="gap:.4rem;flex-wrap:wrap">
+        <span class="badge badge-l4l">L4L</span><span class="badge badge-comp">COMP</span><span class="badge badge-outlet">OUTLET</span>
+      </div>
+      <div class="txt"><div class="name">Tipo de tienda</div>
+        <div class="desc"><b>L4L</b> = tienda comparable, ya existía el año pasado (like-for-like). <b>COMP</b> = no comparable / nueva o sin histórico propio. <b>OUTLET</b> = tienda outlet (zona MONICA).</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><span style="font-weight:700">WK22 · WK23 · WK24</span></div>
+      <div class="txt"><div class="name">Semana ISO (WK)</div>
+        <div class="desc">Semana del calendario ISO. El panel cubre WK22, WK23 y WK24 de 2026, y un <b>Acumulado</b> de las tres.</div></div>
+    </div>
+  </section>
+
+  <!-- 2. COBERTURA -->
+  <section id="cobertura">
+    <div class="sec-head"><span class="sec-num">02</span><h2>La cobertura, en detalle</h2></div>
+    <p class="sec-intro">El indicador central del panel. Responde a una pregunta: ¿el stock actual da para cubrir la demanda esperada?</p>
+
+    <div class="cov-hero">
+      <div class="lead">La <b>cobertura</b> mide cuántas «semanas-equivalente» de venta tienes en stock. Se calcula con la demanda del año anterior como estimación de lo que se venderá:
+        <span class="formula" style="margin-top:.7rem;display:block;width:fit-content">Cobertura = Stock Actual ÷ demanda Año Ant. de las próximas 2 semanas</span>
+      </div>
+      <div class="scale" style="grid-template-columns:1fr 1fr">
+        <div class="band b-crit"><div class="rng">&lt; 1x</div><div class="tag">Alerta</div><div class="note">Menos de 2 semanas de stock. <b>El único caso que se marca en rojo.</b></div></div>
+        <div class="band" style="background:#1a1a1a"><div class="rng">≥ 1x</div><div class="tag">Suficiente</div><div class="note">Cubre 2 semanas de venta o más. Sin alerta, se muestra en negro.</div></div>
+      </div>
+      <div style="margin-top:1.1rem;display:flex;flex-direction:column;gap:.6rem">
+        <div style="display:flex;align-items:center;gap:.8rem"><div class="cov-bar-wrap"><div class="cov-bar"><div class="cov-fill" style="width:12%;background:var(--red)"></div></div><span class="cov-text cov-crit">0.3x</span></div><span style="font-size:.84rem;color:#333"><b>Alerta:</b> menos de 2 semanas de stock.</span></div>
+        <div style="display:flex;align-items:center;gap:.8rem"><div class="cov-bar-wrap"><div class="cov-bar"><div class="cov-fill" style="width:30%;background:#1a1a1a"></div></div><span class="cov-text">1.0x</span></div><span style="font-size:.84rem;color:#333">Justo 2 semanas de stock. Suficiente — en negro.</span></div>
+        <div style="display:flex;align-items:center;gap:.8rem"><div class="cov-bar-wrap"><div class="cov-bar"><div class="cov-fill" style="width:60%;background:#1a1a1a"></div></div><span class="cov-text">5.3x</span></div><span style="font-size:.84rem;color:#333">5 veces la demanda de 2 semanas: stock de sobra, <b>sin alerta</b>.</span></div>
+        <div style="display:flex;align-items:center;gap:.8rem"><div class="cov-bar-wrap"><div class="cov-bar"><div class="cov-fill" style="width:90%;background:#1a1a1a"></div></div><span class="cov-text">15.0x</span></div><span style="font-size:.84rem;color:#333">Mucho stock; posible exceso, pero no es una alerta de cobertura.</span></div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:1rem"><b>Ojo:</b> la cobertura usa la demanda del año anterior de <b>2 semanas</b> como denominador. No es lo mismo que la columna «€ Año Ant.», que muestra la venta de <b>una sola semana</b>. Más detalle en la <a href="#nota" style="color:#92400e;font-weight:700">Nota clave</a>.</div>
+  </section>
+
+  <!-- 3. INDICADORES (KPIs) -->
+  <section id="kpis">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Indicadores (tarjetas superiores)</h2></div>
+    <p class="sec-intro">Los ocho recuadros de arriba resumen la selección actual (cambian con los filtros y la semana elegida).</p>
+
+    <div class="entry">
+      <div class="demo"><div class="metric-card blue"><div class="metric-label">Tiendas</div><div class="metric-value">55</div><div class="metric-sub">L4L: 42 | No L4L: 13</div></div></div>
+      <div class="txt"><div class="name">Tiendas</div><div class="desc">Nº de tiendas en la vista, con el desglose entre comparables (L4L) y no comparables.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card"><div class="metric-label">Stock Actual</div><div class="metric-value">5.366</div><div class="metric-sub">Actual: <b>€134.200</b></div></div></div>
+      <div class="txt"><div class="name">Stock Actual</div><div class="desc">Unidades en tienda este año. El subtítulo muestra su valor en euros.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card orange"><div class="metric-label">Stock Año Ant.</div><div class="metric-value">6.375</div><div class="metric-sub">Misma semana año ant.</div></div></div>
+      <div class="txt"><div class="name">Stock Año Ant.</div><div class="desc">Stock que había en la misma semana del año pasado, como referencia.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card green"><div class="metric-label">Ventas Actual</div><div class="metric-value">362 u</div><div class="metric-sub">€9.908</div></div></div>
+      <div class="txt"><div class="name">Ventas Actual</div><div class="desc">Unidades y euros vendidos en la semana seleccionada de este año.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card"><div class="metric-label">Ventas Año Ant. (próx. 2S)</div><div class="metric-value">1.806 u</div><div class="metric-sub">WK22-23 2025</div></div></div>
+      <div class="txt"><div class="name">Ventas Año Ant. (próx. 2 semanas)</div><div class="desc">Demanda del año anterior en las próximas 2 semanas. Es la base que alimenta el cálculo de cobertura.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card"><div class="metric-label">Cobertura Media</div><div class="metric-value">5.6x</div><div class="metric-sub">Stock Actual ÷ Año Ant. 2S</div></div></div>
+      <div class="txt"><div class="name">Cobertura Media</div><div class="desc">Media de cobertura de las tiendas en vista. En negro; solo se marca en rojo si baja de 1x.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card red"><div class="metric-label">Semana vs Año Ant.</div><div class="metric-value negative">-15,3%</div><div class="metric-sub negative">-4.249 unidades vs Año Ant.</div></div></div>
+      <div class="txt"><div class="name">Semana vs Año Ant.</div><div class="desc">Variación de ventas frente a la <b>misma semana</b> del año pasado (comparación homogénea). Verde si sube, rojo si baja.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><div class="metric-card red"><div class="metric-label">⚠ Cobertura Baja</div><div class="metric-value">2</div><div class="metric-sub">tiendas &lt; 1x</div></div></div>
+      <div class="txt"><div class="name">⚠ Cobertura Baja</div><div class="desc">Cuántas tiendas de la vista están por debajo de 1x, es decir con menos de 2 semanas de stock. El número a vigilar.</div></div>
+    </div>
+  </section>
+
+  <!-- 4. SEMANAS -->
+  <section id="semana">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Selector de semana</h2></div>
+    <p class="sec-intro">Arriba a la derecha del título. Cambia todo el panel a la semana elegida.</p>
+    <div class="entry">
+      <div class="demo" style="gap:.3rem;flex-wrap:wrap">
+        <button class="ftog active">WK22</button><button class="ftog">WK23</button><button class="ftog">WK24</button><button class="ftog">Acumulado</button>
+      </div>
+      <div class="txt"><div class="name">WK22 / WK23 / WK24 / Acumulado</div>
+        <div class="desc">Selecciona una semana individual o el <b>Acumulado</b> de las tres. El botón activo se resalta en negro. Al cambiar de semana se actualizan los indicadores, las tablas y el análisis Modelo / Color.</div></div>
+    </div>
+  </section>
+
+  <!-- 5. FILTROS -->
+  <section id="filtros">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Filtros</h2></div>
+    <p class="sec-intro">La barra blanca bajo los indicadores. Se combinan entre sí; «Restablecer» los borra todos.</p>
+
+    <div class="entry">
+      <div class="demo" style="flex-direction:column;gap:.3rem;align-items:flex-start">
+        <span class="ms-btn active">Zona 5 - CAT <span class="ms-badge">1</span> <span>▾</span></span>
+        <span class="ms-btn">Todos los AM <span>▾</span></span>
+      </div>
+      <div class="txt"><div class="name">Área Manager · Zona · Familia (multi-selección)</div>
+        <div class="desc">Desplegables con casillas: puedes marcar varios valores a la vez. La cifra azul indica cuántos has seleccionado. <b>Área Manager</b> filtra por responsable, <b>Zona</b> por área geográfica, <b>Familia</b> por tipo de producto.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo" style="flex-direction:column;gap:.3rem;align-items:flex-start">
+        <span class="ms-btn">Temporada <span>▾</span></span>
+        <span class="ms-btn">Subtemporada <span>▾</span></span>
+      </div>
+      <div class="txt"><div class="name">Temporada y Subtemporada</div>
+        <div class="desc"><b>Temporada</b> filtra por estación (Invierno / Verano). <b>Subtemporada</b> afina por código concreto (V26, V25, I25…). Al elegir una Temporada, las Subtemporadas disponibles se ajustan solas.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo" style="gap:.3rem;flex-wrap:wrap">
+        <button class="ftog active">L4L</button><button class="ftog">No L4L</button><button class="ftog">Outlet</button>
+      </div>
+      <div class="txt"><div class="name">L4L / Tipo Tienda</div>
+        <div class="desc">Muestra solo tiendas comparables (<b>L4L</b>), solo no comparables (<b>No L4L</b>) o solo <b>Outlet</b>. Son excluyentes entre sí.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo" style="gap:.3rem;flex-wrap:wrap">
+        <button class="ftog active">Actual</button><button class="ftog">⚠ &lt;5x</button>
+      </div>
+      <div class="txt"><div class="name">En Curso «Actual» · Cobertura «⚠ &lt;5x»</div>
+        <div class="desc"><b>Actual</b> deja solo la temporada en curso (V26). <b>⚠ &lt;5x</b> deja solo las tiendas con cobertura crítica.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo" style="gap:.3rem;flex-wrap:wrap">
+        <button class="ftog pareto active">★ Familias Top 80%</button><button class="ftog pareto">★ Temporadas Top 80%</button>
+      </div>
+      <div class="txt"><div class="name">Pareto (★ Top 80%)</div>
+        <div class="desc">Atajos en color ámbar. Filtran a las familias (o temporadas) que concentran aproximadamente el <b>80% de la venta</b>: lo que más mueve la aguja.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><button class="btn-reset">Restablecer</button></div>
+      <div class="txt"><div class="name">Restablecer</div>
+        <div class="desc">Borra todos los filtros y vuelve a la vista completa de las 55 tiendas.</div></div>
+    </div>
+  </section>
+
+  <!-- 6. SECCIONES -->
+  <section id="secciones">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Pestañas y secciones</h2></div>
+    <p class="sec-intro">El cuerpo del panel tiene dos vistas, y al hacer clic en una tienda se abre su ficha de detalle.</p>
+
+    <div class="entry">
+      <div class="demo" style="gap:.3rem;flex-wrap:wrap">
+        <button class="ftog active">Por Área Manager</button><button class="ftog">Tabla de Tiendas</button>
+      </div>
+      <div class="txt"><div class="name">Por Área Manager</div>
+        <div class="desc">Tarjetas agrupadas por responsable, cada una con el resumen de sus tiendas y un mini-listado. Vista por defecto. El Outlet aparece bajo «MONICA».</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><span style="font-size:.8rem;color:#555">Tabla ordenable<br>↕ por cualquier columna</span></div>
+      <div class="txt"><div class="name">Tabla de Tiendas</div>
+        <div class="desc">Todas las tiendas en una tabla. Haz clic en cualquier cabecera para ordenar (▲ / ▼). Haz clic en una fila para abrir su ficha.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo"><span style="font-size:.8rem;color:#555">Ficha de tienda →<br>KPIs + tablas + modelos</span></div>
+      <div class="txt"><div class="name">Ficha de detalle de una tienda</div>
+        <div class="desc">Al pulsar una tienda se despliega su detalle con: indicadores propios, <b>Cobertura por Familia</b>, <b>Cobertura por Temporada</b> y el <b>Análisis Modelo / Color</b>.</div></div>
+    </div>
+    <div class="entry">
+      <div class="demo" style="gap:.6rem">
+        <div class="pcard"><div class="pimg">imagen</div><div class="info">2611PS22</div><div class="sub">€40 · <span style="color:var(--red)">-30%</span></div></div>
+      </div>
+      <div class="txt"><div class="name">Análisis Modelo / Color</div>
+        <div class="desc">Dos columnas comparando artículo a artículo: <b>Actual</b> (venta, stock, cobertura, descuento de cada modelo-color) frente a <b>Año Ant.</b> Cada ficha es un artículo; al pulsarla se ve su foto y detalle.</div></div>
+    </div>
+  </section>
+
+  <!-- 7. COLUMNAS -->
+  <section id="columnas">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Columnas de las tablas</h2></div>
+    <p class="sec-intro">Referencia completa de cada columna y su código de color.</p>
+
+    <table class="ref">
+      <thead><tr><th>Columna</th><th>Qué es</th><th>Color</th></tr></thead>
+      <tbody>
+        <tr><td>Tienda</td><td>Nombre y código de la tienda (K01, K72…).</td><td>—</td></tr>
+        <tr><td>AM</td><td>Área Manager responsable.</td><td>—</td></tr>
+        <tr><td>Zona</td><td>Área geográfica.</td><td>—</td></tr>
+        <tr><td>Tipo</td><td>L4L / COMP / OUTLET (ver Conceptos base).</td><td>etiqueta</td></tr>
+        <tr><td>Stock Actual</td><td>Unidades en tienda este año.</td><td>negro</td></tr>
+        <tr><td>Stock Año Ant.</td><td>Stock en la misma semana del año pasado.</td><td>negro</td></tr>
+        <tr><td>Uds. Actual</td><td>Unidades vendidas este año (semana elegida).</td><td>—</td></tr>
+        <tr><td>€ Actual</td><td>Venta en euros este año (IVA incl.).</td><td>—</td></tr>
+        <tr><td>Uds. Año Ant.</td><td>Unidades vendidas la misma semana del año pasado.</td><td>negro</td></tr>
+        <tr><td>€ Año Ant.</td><td>Venta en euros de la misma semana del año pasado.</td><td>negro</td></tr>
+        <tr><td>vs Año Ant. %</td><td>Variación de venta frente a esa misma semana.<br><span class="positive">+15,4%</span> &nbsp; <span class="negative">-7,0%</span></td><td>verde / rojo</td></tr>
+        <tr><td>Cobertura</td><td>Semanas-equivalente de stock. Barra + valor.</td><td>negro · <span class="negative">rojo si &lt; 1x</span></td></tr>
+      </tbody>
+    </table>
+
+    <p class="sec-intro" style="margin-top:1.4rem;margin-bottom:.6rem">En el <b>Análisis Modelo / Color</b> aparecen además:</p>
+    <table class="ref">
+      <thead><tr><th>Columna</th><th>Qué es</th><th>Color</th></tr></thead>
+      <tbody>
+        <tr><td>Artículo</td><td>Referencia y color del modelo, con su descripción.</td><td>—</td></tr>
+        <tr><td>Stock</td><td>Unidades de ese artículo en la tienda.</td><td>negro</td></tr>
+        <tr><td>PVP Orig.</td><td>Precio de venta original (sin descuento).</td><td>—</td></tr>
+        <tr><td>Precio Medio</td><td>Precio medio real de venta (€ ÷ unidades).</td><td>—</td></tr>
+        <tr><td>Descuento</td><td>Rebaja sobre el PVP original (es un %).<br><span style="font-weight:700">0%</span> &nbsp; <span class="negative">-15%</span> &nbsp; <span class="negative">-30%</span></td><td>negro sin rebaja · <span class="negative">rojo si hay descuento</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 8. NOTA CLAVE -->
+  <section id="nota">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Nota clave: dos «Año Ant.» distintos</h2></div>
+    <div class="note" style="margin-top:0">
+      El año anterior se usa de <b>dos formas</b> a propósito, y por eso los números no tienen por qué cuadrar entre sí:
+      <div style="margin-top:.7rem;display:flex;flex-direction:column;gap:.6rem">
+        <div>• <b>Columnas de venta «Año Ant.»</b> (€ Año Ant., Uds. Año Ant., vs Año Ant. %) → comparan con la <b>misma semana</b> del año pasado. Sirven para ver si vendes más o menos que el año anterior, de forma homogénea (una semana contra una semana).</div>
+        <div>• <b>Denominador de la cobertura</b> → usa la demanda del año pasado de las <b>próximas 2 semanas</b>. Sirve para estimar si el stock aguantará lo que viene.</div>
+      </div>
+      <div style="margin-top:.8rem">Ejemplo real (K72, WK24): «€ Año Ant.» ≈ <b>€16.254</b> (una semana), mientras la cobertura 3,7x se calcula sobre la demanda de 2 semanas. Ambos son correctos: miden cosas diferentes.</div>
+    </div>
+  </section>
+
+  <footer>
+    Glosario del Panel de Cobertura de Stock · Koroshi · WK22 / WK23 / WK24 2026 · Importes con IVA incluido.<br>
+    Documento explicativo: contiene solo ejemplos ilustrativos, ningún dato de tienda real. Puede compartirse libremente.
+  </footer>
+
+</div>
+</body>
+</html>
